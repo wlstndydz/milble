@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 군인들의 익명 SNS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .main-title {
+            font-size: 2rem;
+            width: 100%;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 0.15em;
+      
+        }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .logo-icon {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            font-size: 1rem;
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .categories {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 2rem;
+        }
+        .category-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        .post-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .post-category {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+        .post-category h2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .post-category h2 a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .post-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .post-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .post-views {
+            color: #6b7280;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span>Milble</span>
+                </div>
+                {% if user.is_authenticated %}
+                <!-- 로그인된 상태 -->
+                <div class="welcome-message">
+                    Welcome, {{ user.username }}
+                </div>
+                <button class="login-btn">내정보</button>
+                {% else %}
+                <!-- 로그인되지 않은 상태 -->
+                <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">군인 익명 SNS - MILBLE</h1>
+        <div class="search-container">
+            <input type="search" class="search-input" placeholder="관심있는 주제를 검색해보세요">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn">일상</button>
+            <button class="category-btn">고민상담</button>
+            <button class="category-btn">유머</button>
+            <button class="category-btn">연애</button>
+            <button class="category-btn">취미</button>
+            <button class="category-btn">스포츠</button>
+            <button class="category-btn">게임</button>
+            <button class="category-btn">음식</button>
+            <button class="category-btn">여행</button>
+            <button class="category-btn">건강</button>
+        </div>
+
+        <div class="post-categories">
+            <div class="post-category">
+                <h2>
+                    <span>성격유형</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
+                        <span class="post-views">2,963</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
+                        <span class="post-views">121</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
+                        <span class="post-views">129</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
+                        <span class="post-views">171</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ESTJ 여자 상담무릅</span>
+                        <span class="post-views">338</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="post-category">
+                <h2>
+                    <span>주류탐험</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">두께 거저가라는데</span>
+                        <span class="post-views">568</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">하이..정말 소고기에는</span>
+                        <span class="post-views">405</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">집에 전원진, 편한든진이 똑 떨어졌는데</span>
+                        <span class="post-views">56</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">너희 꼬낙 원룸가 어느 저렴이랑 비슷한지 아냐</span>
+                        <span class="post-views">119</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">선생님답 대체 어 술은 뭘까요?</span>
+                        <span class="post-views">239</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="post-category">
+                <h2>
+                    <span>나들이 명소</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">주식영점인데 부산에 가족 나들이 어디로 가자?</span>
+                        <span class="post-views">58</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">전주 근교 데이트장소 추천좀</span>
+                        <span class="post-views">33</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">망원한강 시람 많아?</span>
+                        <span class="post-views">31</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">여의나루 라닝</span>
+                        <span class="post-views">30</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">서울 경기 인천으로 어머니 모시기 좋은 곳 있을까...</span>
+                        <span class="post-views">64</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="post-category">
+                <h2>
+                    <span>OTT뭐볼까</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">게인적인 미드 월드온 브레이킹베드</span>
+                        <span class="post-views">71</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">아무도 없는 숲속에서</span>
+                        <span class="post-views">50</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">무도심문관 재밌게 본사람은</span>
+                        <span class="post-views">131</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">우씨양품 정유미</span>
+                        <span class="post-views">520</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">오늘 수군 보려는데 어때?</span>
+                        <span class="post-views">71</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="post-category">
+                <h2>
+                    <span>성격유형</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
+                        <span class="post-views">2,963</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
+                        <span class="post-views">121</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
+                        <span class="post-views">129</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
+                        <span class="post-views">171</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ESTJ 여자 상담무릅</span>
+                        <span class="post-views">338</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="post-category">
+                <h2>
+                    <span>성격유형</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
+                        <span class="post-views">2,963</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
+                        <span class="post-views">121</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
+                        <span class="post-views">129</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
+                        <span class="post-views">171</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ESTJ 여자 상담무릅</span>
+                        <span class="post-views">338</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="post-category">
+                <h2>
+                    <span>성격유형</span>
+                    <a href="#">더보기 ></a>
+                </h2>
+                <ul class="post-list">
+                    <li class="post-item">
+                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
+                        <span class="post-views">2,963</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
+                        <span class="post-views">121</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
+                        <span class="post-views">129</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
+                        <span class="post-views">171</span>
+                    </li>
+                    <li class="post-item">
+                        <span class="post-title">ESTJ 여자 상담무릅</span>
+                        <span class="post-views">338</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 여기에 필요한 JavaScript 코드를 추가할 수 있습니다.
+        // 예: 카테고리 버튼 클릭 이벤트 처리, 검색 기능 구현 등
+    </script>
+</body>
+</html>
