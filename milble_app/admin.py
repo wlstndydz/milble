@@ -5,9 +5,9 @@ from .models import SignupRequest
 
 @admin.register(SignupRequest)
 class SignupRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'approved', 'verification_image')
-    list_filter = ('approved',)
-    search_fields = ('id',)
+    list_display = ('id', 'approved', 'verification_image', 'unit')
+    list_filter = ('approved', 'unit')
+    search_fields = ('id', 'unit')
 
     actions = ['approve_requests']
 

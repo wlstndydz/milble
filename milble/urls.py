@@ -18,6 +18,7 @@ from django.urls import path
 from milble_app import views  # 애플리케이션의 이름으로 views를 임포트
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 
 
@@ -26,5 +27,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('signup/', views.signup_request_view, name='signup_request'),
     path('signup/success/', views.signup_success, name='signup_success'),
-    path('login/', views.login_view, name='login')
+    path('login/', views.login_view, name='login'),
+    path('my_profile/', views.profile_view, name='profile'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

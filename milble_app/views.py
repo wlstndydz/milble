@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login as auth_login  # 'login'을 'auth_login'으로 임포트
 from .forms import SignupRequestForm
 from .models import SignupRequest
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User  # User 모델을 임포트
 from .forms import LoginForm  # 여기서 LoginForm을 임포트
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, 'index.html')
@@ -32,25 +33,42 @@ def login_view(request):
             
             try:
                 user_request = SignupRequest.objects.get(id=id)
-                if user_request.password == password:  # 암호화된 비밀번호 비교 필요
-                    # 사용자 객체를 가져오거나 생성
-                    user, created = User.objects.get_or_create(username=id)
-                    if created:
+                if user_request.approved:
+                    # 사용자 인증
+                    user = authenticate(request, username=id, password=password)
+                    if user is not None:
+                        # 비밀번호가 정확한지 확인
+                        if user.check_password(password):
+                            auth_login(request, user)
+                            return redirect('/')  # 성공 시 이동할 URL 이름으로 변경
+                        else:
+                            form.add_error(None, 'Invalid ID or password.')
+                    else:
+                        # 사용자 생성 필요
+                        user = User(username=id)
                         user.set_password(password)
                         user.save()
-                    else:
-                        # 비밀번호가 다른 경우 확인 필요
-                        if not user.check_password(password):
-                            form.add_error(None, 'Invalid ID or password.')
-                            return render(request, 'login.html', {'form': form})
-                    
-                    login(request, user)
-                    return redirect('/')  # 성공 시 이동할 URL 이름으로 변경
+                        # 로그인
+                        auth_login(request, user)
+                        return redirect('/')  # 성공 시 이동할 URL 이름으로 변경
                 else:
-                    form.add_error(None, 'Invalid ID or password.')
+                    form.add_error(None, 'Your account is not approved yet.')
             except SignupRequest.DoesNotExist:
                 form.add_error(None, 'Invalid ID or password.')
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
+@login_required
+def profile_view(request):
+    try:
+        # 현재 로그인된 사용자 ID로 SignupRequest 객체를 가져옵니다.
+        signup_request = SignupRequest.objects.get(id=request.user.username)
+    except SignupRequest.DoesNotExist:
+        signup_request = None
+
+    context = {
+        'user': request.user,
+        'signup_request': signup_request
+    }
+    return render(request, 'profile.html', context)

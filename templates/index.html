@@ -11,7 +11,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f3f4f6;
+            background-color: #ffffff;
         }
         .container {
             max-width: 1200px;
@@ -37,6 +37,7 @@
       
         }
         .login-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
             background-color: #2563eb;
             color: white;
             border: none;
@@ -157,11 +158,7 @@
                     <span>Milble</span>
                 </div>
                 {% if user.is_authenticated %}
-                <!-- 로그인된 상태 -->
-                <div class="welcome-message">
-                    Welcome, {{ user.username }}
-                </div>
-                <button class="login-btn">내정보</button>
+                <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
                 {% else %}
                 <!-- 로그인되지 않은 상태 -->
                 <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
