@@ -11,7 +11,7 @@
             font-family: 'Noto Sans KR', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f3f4f6;
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,7 +20,7 @@
         .container {
             background-color: white;
             border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(0, 0, 0, 0.1);
             padding: 2rem;
             width: 100%;
             max-width: 500px;
@@ -172,7 +172,7 @@
                 <label for="{{ field.id_for_label }}">
                     {{ field.label }}
                     {% if field.label == "현역병 인증 사진" %}  <!-- 인증 사진 필드에만 적용 -->
-                         <button type="button" class="info-icon" onclick="showPopup()">?</button>
+                         <button type="button" class="info-icon" onclick="showVerificationPopup()">?</button>
                     {% endif %}
             </label>
                 {{ field }}
@@ -184,37 +184,55 @@
         </form>
     </div>
     
-     <div id="popup" class="popup">
+    <!-- Unit Popup (부대 소속 팝업) -->
+    <div id="unit-popup" class="popup">
         <div class="popup-content">
-            <span class="close" onclick="closePopup()">&times;</span>
+            <span class="close" onclick="closeUnitPopup()">&times;</span>
+            <p>부대 정보는 사단과 대대까지만 적어주세요.<br>
+            </p>
+            <!-- 추가 설명 -->
+        </div>
+    </div>
+    
+    <!-- Verification Popup (현역병 인증 사진 팝업) -->
+    <div id="verification-popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeVerificationPopup()">&times;</span>
             <img src="/media/images/armyVerified.jpg" alt="Verification Image">
             <p>밀리패스(어플)접속 - 더보기 - 회원정보 관리에서 스크린샷을 찍어 업로드해주세요.<br>
             익명처리를 위해 현역병과 군번 앞자리를 빼고 다른 것들은 모자이크 처리해주세요.</p>
             <a href="https://www.milipass.kr/main.html" target="_blank">
-            밀리패스 홈페이지
+                밀리패스 홈페이지
             </a>
         </div>
     </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function showPopup() {
-                document.getElementById('popup').style.display = 'flex'; // 팝업창을 표시
-            }
+     <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Unit popup (부대 소속 팝업) 관련 함수
+                function showUnitPopup() {
+                    document.getElementById('unit-popup').style.display = 'flex';
+                }
 
-            function closePopup() {
-                document.getElementById('popup').style.display = 'none'; // 팝업창을 숨김
-            }
+                function closeUnitPopup() {
+                    document.getElementById('unit-popup').style.display = 'none';
+                }
 
-            // Attach event handlers
-            document.querySelectorAll('.info-icon').forEach(icon => {
-                icon.addEventListener('click', showPopup);
+                // Verification popup (현역병 인증 팝업) 관련 함수
+                function showVerificationPopup() {
+                    document.getElementById('verification-popup').style.display = 'flex';
+                }
+
+                function closeVerificationPopup() {
+                    document.getElementById('verification-popup').style.display = 'none';
+                }
+
+                // Expose functions globally
+                window.showUnitPopup = showUnitPopup;
+                window.closeUnitPopup = closeUnitPopup;
+                window.showVerificationPopup = showVerificationPopup;
+                window.closeVerificationPopup = closeVerificationPopup;
             });
-
-            // Expose functions globally
-            window.showPopup = showPopup;
-            window.closePopup = closePopup;
-        });
-    </script>
+        </script>
 </body>
 </html>

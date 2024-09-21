@@ -132,3 +132,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 미디어 파일을 제공할 URL 경로
 MEDIA_URL = '/media/'
 LOGOUT_REDIRECT_URL = '/'
+AUTH_USER_MODEL = 'milble_app.CustomUser'

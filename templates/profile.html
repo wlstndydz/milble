@@ -106,15 +106,11 @@
             <h1>내 정보</h1>
             <div class="info">
                 <label for="user_id">ID</label>
-                <p id="user_id">{{ user.username }}</p>
+                <p id="user_id">{{ user.username }}</p> <!-- CustomUser의 username 사용 -->
             </div>
             <div class="info">
                 <label for="unit">소속</label>
-                {% if signup_request %}
-                <p id="unit">{{ signup_request.unit }}</p>
-                {% else %}
-                <p id="unit">정보 없음</p>
-                {% endif %}
+                <p id="unit">{{ user.unit|default:"정보 없음" }}</p> <!-- CustomUser의 unit 사용 -->
             </div>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}

@@ -46,13 +46,20 @@
             cursor: pointer;
             font-weight: bold;
         }
-
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
+            position: relative; /* 추가 */
         }
+        .header-buttons {
+            display: flex; /* 추가 */
+            gap: 0.5rem; /* 버튼 사이의 간격 추가 */
+            position: absolute; /* 추가 */
+            right: 20px; /* 오른쪽 정렬 */
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -106,7 +113,7 @@
         }
         .post-categories {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
             gap: 2rem;
         }
         .post-category {
@@ -142,6 +149,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 텍스트 색상 상속 */
         }
         .post-views {
             color: #6b7280;
@@ -157,233 +166,49 @@
                 <div class="logo">
                     <span>Milble</span>
                 </div>
-                {% if user.is_authenticated %}
-                <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
-                {% else %}
-                <!-- 로그인되지 않은 상태 -->
-                <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
-                {% endif %}
+                <div class="header-buttons"> <!-- 추가된 부분 -->
+                    {% if user.is_authenticated %}
+                    <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                    <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                    {% else %}
+                    <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div> <!-- 추가된 부분 -->
             </div>
         </div>
     </header>
 
     <main class="container">
-        <h1 class="main-title">군인 익명 SNS - MILBLE</h1>
+        <h1 class="main-title">현역 군인 익명 커뮤니티 - MILBLE</h1>
         <div class="search-container">
             <input type="search" class="search-input" placeholder="관심있는 주제를 검색해보세요">
             <span class="search-icon">🔍</span>
         </div>
 
         <div class="categories">
-            <button class="category-btn">일상</button>
-            <button class="category-btn">고민상담</button>
-            <button class="category-btn">유머</button>
-            <button class="category-btn">연애</button>
-            <button class="category-btn">취미</button>
-            <button class="category-btn">스포츠</button>
-            <button class="category-btn">게임</button>
-            <button class="category-btn">음식</button>
-            <button class="category-btn">여행</button>
-            <button class="category-btn">건강</button>
+                {% for category in categories %}
+                <button class=category-btn onclick="window.location.href='{% url 'category_posts' category.name %}'">{{ category.name }}</button>
+                {% endfor %}
         </div>
 
         <div class="post-categories">
+            {% for category, posts in posts_by_category.items %}
             <div class="post-category">
                 <h2>
-                    <span>성격유형</span>
-                    <a href="#">더보기 ></a>
+                    <span>{{ category.name }}</span>
+                    <a href="{% url 'category_posts' category_name=category.name %}" class="more-link">더보기 ></a>
                 </h2>
                 <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
-                        <span class="post-views">2,963</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
-                        <span class="post-views">121</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
-                        <span class="post-views">129</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
-                        <span class="post-views">171</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ESTJ 여자 상담무릅</span>
-                        <span class="post-views">338</span>
-                    </li>
+                    {% for post in posts %}
+            <li class="post-item">
+                <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+            </li>
+                    {% empty %}
+                    <li>게시물이 없습니다.</li>
+                    {% endfor %}
                 </ul>
             </div>
-            <div class="post-category">
-                <h2>
-                    <span>주류탐험</span>
-                    <a href="#">더보기 ></a>
-                </h2>
-                <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">두께 거저가라는데</span>
-                        <span class="post-views">568</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">하이..정말 소고기에는</span>
-                        <span class="post-views">405</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">집에 전원진, 편한든진이 똑 떨어졌는데</span>
-                        <span class="post-views">56</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">너희 꼬낙 원룸가 어느 저렴이랑 비슷한지 아냐</span>
-                        <span class="post-views">119</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">선생님답 대체 어 술은 뭘까요?</span>
-                        <span class="post-views">239</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="post-category">
-                <h2>
-                    <span>나들이 명소</span>
-                    <a href="#">더보기 ></a>
-                </h2>
-                <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">주식영점인데 부산에 가족 나들이 어디로 가자?</span>
-                        <span class="post-views">58</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">전주 근교 데이트장소 추천좀</span>
-                        <span class="post-views">33</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">망원한강 시람 많아?</span>
-                        <span class="post-views">31</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">여의나루 라닝</span>
-                        <span class="post-views">30</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">서울 경기 인천으로 어머니 모시기 좋은 곳 있을까...</span>
-                        <span class="post-views">64</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="post-category">
-                <h2>
-                    <span>OTT뭐볼까</span>
-                    <a href="#">더보기 ></a>
-                </h2>
-                <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">게인적인 미드 월드온 브레이킹베드</span>
-                        <span class="post-views">71</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">아무도 없는 숲속에서</span>
-                        <span class="post-views">50</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">무도심문관 재밌게 본사람은</span>
-                        <span class="post-views">131</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">우씨양품 정유미</span>
-                        <span class="post-views">520</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">오늘 수군 보려는데 어때?</span>
-                        <span class="post-views">71</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="post-category">
-                <h2>
-                    <span>성격유형</span>
-                    <a href="#">더보기 ></a>
-                </h2>
-                <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
-                        <span class="post-views">2,963</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
-                        <span class="post-views">121</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
-                        <span class="post-views">129</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
-                        <span class="post-views">171</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ESTJ 여자 상담무릅</span>
-                        <span class="post-views">338</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="post-category">
-                <h2>
-                    <span>성격유형</span>
-                    <a href="#">더보기 ></a>
-                </h2>
-                <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
-                        <span class="post-views">2,963</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
-                        <span class="post-views">121</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
-                        <span class="post-views">129</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
-                        <span class="post-views">171</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ESTJ 여자 상담무릅</span>
-                        <span class="post-views">338</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="post-category">
-                <h2>
-                    <span>성격유형</span>
-                    <a href="#">더보기 ></a>
-                </h2>
-                <ul class="post-list">
-                    <li class="post-item">
-                        <span class="post-title">주식 어떻게 부자되나요 판타장으로 선면</span>
-                        <span class="post-views">2,963</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">intp님 - intp님 원래 대화 잘 돼나요?</span>
-                        <span class="post-views">121</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ENTJ 랑 ESTJ 랑 디플점 본인들이 좀 알려줘</span>
-                        <span class="post-views">129</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">잇팁 istp 애개 사프타린?</span>
-                        <span class="post-views">171</span>
-                    </li>
-                    <li class="post-item">
-                        <span class="post-title">ESTJ 여자 상담무릅</span>
-                        <span class="post-views">338</span>
-                    </li>
-                </ul>
-            </div>
+            {% endfor %}
         </div>
     </main>
 

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+{% load mask_filters %}
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 게시물 상세</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .head-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .logo-icon {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+        .login-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 728px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .breadcrumb {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+            font-weight: bold; /* 볼드체로 설정 */
+        }
+        .breadcrumb span {
+            color: #2563eb;
+        }
+        .post-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .post-meta {
+            display: flex;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb; /* 구분선 추가 */
+            padding-bottom: 30px; /* 구분선과 내용 사이의 여백 */
+        }
+        .post-meta > * {
+            margin-right: 8px;
+        }
+        .post-meta .unit {
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .unit{
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .post-content {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .comments-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+        }
+        .comments-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .comment {
+            background-color: #ffffff;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            position: relative; /* 상대 위치로 설정 */
+        }
+        .comment-meta {
+            display: flex;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .comment-meta > * {
+            margin-right: 8px;
+        }
+        .comment-content {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            padding: 8px; /* 패딩 줄임 */
+            border: 1px solid #d1d5db;
+            border-radius: 4px; /* 둥근 모서리 더 작게 */
+            font-size: 14px; /* 글씨 크기 줄임 */
+            margin-bottom: 10px; /* 마진 줄임 */
+            box-sizing: border-box;
+            resize: none; /* 크기 조절 비활성화 (원하는 경우) */          
+        }
+        .submit-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+        }
+        .reply-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            display: inline-block; /* 기본적으로 숨김 */
+            position: absolute; /* 절대 위치로 설정 */
+            right: 16px; /* 오른쪽 여백 */
+            top: 16px; /* 위쪽 여백 */
+            cursor: pointer;
+            background-color: #ffffff;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            border: 1px solid white; /* 테두리를 흰색으로 설정 */
+        }
+        .reply-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .reply{
+            background: #F2F2F2;
+            padding: 8px;
+            padding-left: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="head-container">
+            <div class="header-content">
+                <div class="logo">
+                    <span>Milble</span>
+                </div>
+                {% if user.is_authenticated %}
+                <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                {% else %}
+                <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="breadcrumb">
+            카테고리 > <span>{{ post.category.name }}</span>
+        </div>
+
+        <h1 class="post-title">{{ post.title }}</h1>
+
+        <div class="post-meta">
+            <span class="unit">{{ post.unit }}</span>
+            <span>{{ author_masked }}</span>
+        </div>
+
+        <div class="post-content">
+            {{ post.content }}
+        </div>
+
+        <div class="comments-section">
+            <h2 class="comments-title">댓글</h2>
+            <ul class="comment-list">
+                {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-meta">
+                        <span class="unit">{{ comment.unit }}</span>
+                        <span class="author">{{ comment.author|mask_author }}</span>
+                    </div>
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+                    <button class="reply-btn" onclick="toggleReplyForm({{ comment.id }})">대댓글 달기</button> <!-- 버튼 위치 변경 -->
+
+                    <!-- 대댓글 폼 -->
+                    <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
+                        <form method="post">
+                            {% csrf_token %}
+                            <textarea name="content" rows="3" placeholder="대댓글을 입력하세요"></textarea>
+                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                            <button type="submit" name="reply-submit" class="submit-btn">대댓글 작성</button>
+                        </form>
+                    </div>
+
+                    <!-- 대댓글 리스트 -->
+                    {% for reply in comment.replies.all %}
+                    <div class="reply">
+                        <div class="comment-meta">
+                            <span class="unit">{{ reply.unit }}</span>
+                            <span class="author">{{ reply.author|mask_author }}</span>
+                        </div>
+                        <div class="comment-content">
+                            {{ reply.content }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+        {% endfor %}
+            </ul>
+            {% if user.is_authenticated %}
+            <form method="post" class="comment-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" name="comment-submit" class="submit-btn">댓글 작성</button>
+            </form>
+            {% else %}
+            <p>댓글을 작성하려면 <a href="{% url 'login' %}">로그인</a> 해주세요.</p>
+            {% endif %}
+        </div>
+
+    </div>
+    <script>
+        function toggleReplyForm(commentId) {
+            var replyForm = document.getElementById('reply-form-' + commentId);
+            if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+                replyForm.style.display = 'block';
+            } else {
+                replyForm.style.display = 'none';
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const commentForm = document.querySelector(".comment-form");
+            const textarea = commentForm.querySelector("textarea[name='content']");
+            const submitButton = commentForm.querySelector("button[type='submit']");
+
+            commentForm.addEventListener("submit", function(event) {
+                if (textarea.value.trim() === "") {  // 공백 체크
+                    event.preventDefault();  // 기본 제출 동작 방지
+                    alert("댓글 내용을 입력해주세요.");  // 사용자에게 알림
+                    textarea.focus();  // 텍스트 영역에 포커스
+                }
+            });
+        });
+    </script>
+</body>
+</html>
