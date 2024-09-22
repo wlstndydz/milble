@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404
 from .forms import CommentForm, ReplyForm
 from .models import CustomUser
 from django.http import HttpResponseForbidden
+from .models import Unit, UnitRequest
 
 def index(request):
     categories = Category.objects.all()  # 모든 카테고리 가져오기
@@ -30,12 +31,6 @@ def signup_request_view(request):
     return render(request, 'signup_request.html', {'form': form})
 
 def signup_success(request):
-    
-    referer = request.META.get('HTTP_REFERER')
-    
-    if referer is None or 'signup_request' not in referer:
-        return HttpResponseForbidden("Access denied")
-    
     return render(request, 'signup_success.html')
 
 def login_view(request):
@@ -140,3 +135,22 @@ def post_detail(request, post_id):
         'form': form,
     }
     return render(request, 'post_detail.html', context)
+
+def unit_create_view(request):
+    
+    units = Unit.objects.all()  # 모든 부대 가져오기
+    
+    if request.method == 'POST':
+        unit_name = request.POST.get('name')
+        if unit_name:
+            # 이미 등록된 부대 이름인지 확인
+            if Unit.objects.filter(name=unit_name).exists():
+                return render(request, 'create_unit.html', {'error': '부대 이름이 이미 등록되어 있습니다.'})
+            else:
+                if not UnitRequest.objects.filter(name=unit_name).exists():
+                    UnitRequest.objects.create(name=unit_name)
+                    return redirect('signup_request')
+                else:
+                    return redirect('signup_request')    # 중복된 이름일 경우 처리
+    
+    return render(request, 'create_unit.html', {'units': units})

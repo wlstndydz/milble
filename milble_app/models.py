@@ -3,8 +3,21 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 
+class UnitRequest(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    approved = models.BooleanField(default=False)  # 승인 상태 필드 추가
+
+    def __str__(self):
+        return self.name
+    
+class Unit(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class CustomUser(AbstractUser):
-    unit = models.CharField(max_length=255, blank=True)  # unit 필드 추가
+    unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.SET_NULL)
 
 class SignupRequest(models.Model):
     
@@ -12,7 +25,7 @@ class SignupRequest(models.Model):
     password = models.CharField(max_length=128)  # 비밀번호 (암호화된 상태로 저장)
     verification_image = models.ImageField(upload_to='verification_images/')  # 인증사진 업로드
     approved = models.BooleanField(default=False)  # 요청 승인 상태
-    unit = models.CharField(max_length=255)  # 드롭다운 메뉴 대신 문자열로 입력 가능
+    unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.id

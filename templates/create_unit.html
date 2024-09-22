@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부대 소속 추가</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* 팝업 스타일 */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function showPopup(event) {
+            event.preventDefault(); // 기본 폼 제출 방지
+            document.getElementById("confirmation-popup").style.display = "flex";
+        }
+        
+        function closePopup() {
+            document.getElementById("confirmation-popup").style.display = "none";
+            document.getElementById("unit-form").submit(); // 폼 제출
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>부대 소속 추가</h1>
+        
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form id="unit-form" method="POST" onsubmit="showPopup(event)">
+            {% csrf_token %}
+            <label for="unit_name">전체 부대명</label>
+            <p>
+                저희와 함께 부대들을 만들주세요!
+                최대한 상세하게 부대명을 적어주세요.<br>
+                익명을 위해서 대대까지만 적어주세요!<br>
+                등록이후 중복 여부를 확인하는 절차가 있습니다.<br>
+                이미 있는 부대일 경우 등록이 안될 수 있습니다.<br>
+                24시간 이후에도 부대 추가가 안되거나 추가 문의가 있는경우 milble.company@gamil.com 으로 연락부탁드립니다.
+            </p>
+            <input type="text" id="unit_name" name="name" placeholder="예) 1사단 11여단 1대대">
+            
+            <button type="submit">부대 추가</button>
+        </form>
+                
+        <h2>현재 등록된 부대</h2>
+        <ul>
+            {% for unit in units %}
+                <li>{{ unit.name }}</li>
+            {% empty %}
+                <li>등록된 부대가 없습니다.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- 팝업 -->
+    <div id="confirmation-popup" class="popup">
+        <div class="popup-content">
+            <p>부대 추가 요청이 완료되었습니다.<br>
+                승인은 24시간 이내에 처리됩니다.</p>
+            <button onclick="closePopup()">닫기</button>
+        </div>
+    </div>
+</body>
+</html>

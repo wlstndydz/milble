@@ -4,10 +4,6 @@ from .models import SignupRequest
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Post, Category, Comment, Reply
 
-# forms.py
-from django import forms
-from .models import SignupRequest
-
 class SignupRequestForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")  # 비밀번호 확인 필드 추가
 

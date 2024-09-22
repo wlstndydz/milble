@@ -32,5 +32,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('post/new/', views.post_create, name='post_create'),  # 게시물 작성 URL
     path('category/<str:category_name>/', views.category_view, name='category_posts'),
-    path('post/<int:post_id>/', views.post_detail, name='post_detail')
+    path('post/<int:post_id>/', views.post_detail, name='post_detail'),
+    path('create-unit/', views.unit_create_view, name='create_unit')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
