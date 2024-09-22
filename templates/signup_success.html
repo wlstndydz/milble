@@ -1,51 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Success</title>
+    <title>회원가입 성공 - Milble</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        /* 추가: confetti를 위한 기본 스타일 */
+        #confetti-canvas {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
         .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .message {
-            font-size: 1.25rem;
+            max-width: 1200px;
+            margin: 0 auto;
             margin-bottom: 20px;
+            padding: 0 20px;
         }
-        .home-button {
-            background-color: #007bff;
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .login-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #2563eb;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
             cursor: pointer;
-            text-decoration: none;
+            font-weight: bold;
         }
-        .home-button:hover {
-            background-color: #0056b3;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            position: relative; /* 추가 */
+        }
+        .header-buttons {
+            display: flex; /* 추가 */
+            gap: 0.5rem; /* 버튼 사이의 간격 추가 */
+            position: absolute; /* 추가 */
+            right: 20px; /* 오른쪽 정렬 */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        .logo-icon {
+            margin-right: 0.5rem;
+            font-size: 2rem;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="message">
-            회원가입 요청을 성공적으로 보냈어요! 2~3일내에 심사 될거예요!
+<body class="min-h-screen bg-gray-100 flex flex-col">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="{% url 'index' %}" class="logo">
+                    <span>Milble</span>
+                </a>
+            </div>
         </div>
-        <a href="{% url 'index' %}" class="home-button">홈으로 돌아가기</a>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-lg shadow-md">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">회원가입 성공!</h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    회원가입 요청을 성공적으로 보냈어요!<br> 2~3일내에 심사 될거예요!
+                </p>
+            </div>
+            <div class="mt-8 space-y-6">
+                <a
+                    href="/"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                    홈으로 돌아가기
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confetti Canvas -->
+    <div class="fixed inset-0 pointer-events-none">
+        <canvas id="confetti-canvas"></canvas>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
+    <script>
+        // Confetti 효과를 위해 추가된 JavaScript 코드
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }, 500);
+        });
+    </script>
 </body>
 </html>

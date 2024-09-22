@@ -69,6 +69,7 @@
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
             letter-spacing: 2px;
+            text-decoration: none; /* 밑줄 제거 */
         }
         .logo-icon {
             margin-right: 0.5rem;
@@ -95,21 +96,26 @@
         }
         .categories {
             background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 1rem;
+            padding: 10px;
             overflow-x: auto;
             white-space: nowrap;
             margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
         }
         .category-btn {
             display: inline-block;
             padding: 0.5rem 1rem;
             margin-right: 0.5rem;
-            background-color: #f3f4f6;
+            background-color: #ffffff;
             border: 1px solid #d1d5db;
-            border-radius: 0.25rem;
+            border-radius: 1rem;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 16px; /* 글자 크기를 조정하여 버튼 크기를 키울 수 있음 */
+        }
+        .category-btn:hover {
+        background-color: #f0f0f0; /* 마우스를 올렸을 때의 배경색 */
+        border-color: #ccc; /* 선택적으로 테두리 색도 변경 가능 */
         }
         .post-categories {
             display: grid;
@@ -157,15 +163,16 @@
             font-size: 0.8rem;
             white-space: nowrap;
         }
+
     </style>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <a href="{% url 'index' %}" class="logo">
                     <span>Milble</span>
-                </div>
+                </a>
                 <div class="header-buttons"> <!-- 추가된 부분 -->
                     {% if user.is_authenticated %}
                     <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>

@@ -12,6 +12,7 @@ from .models import Category, Post, Comment # Category 모델 임포트 추가
 from django.shortcuts import get_object_or_404
 from .forms import CommentForm, ReplyForm
 from .models import CustomUser
+from django.http import HttpResponseForbidden
 
 def index(request):
     categories = Category.objects.all()  # 모든 카테고리 가져오기
@@ -29,6 +30,12 @@ def signup_request_view(request):
     return render(request, 'signup_request.html', {'form': form})
 
 def signup_success(request):
+    
+    referer = request.META.get('HTTP_REFERER')
+    
+    if referer is None or 'signup_request' not in referer:
+        return HttpResponseForbidden("Access denied")
+    
     return render(request, 'signup_success.html')
 
 def login_view(request):

@@ -37,6 +37,7 @@
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
             letter-spacing: 2px;
+            text-decoration: none; /* 밑줄 제거 */
         }
         .login-btn {
             font-family: 'Noto Sans KR', Arial, sans-serif;
@@ -73,6 +74,8 @@
         .post-title {
             font-size: 1.1rem;
             font-weight: bold;
+            text-decoration: none;  /* 밑줄 제거 */
+            color: inherit;        /* 부모 요소의 색상 상속 */
         }
         .post-meta {
             display: flex;
@@ -108,9 +111,9 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <a href="{% url 'index' %}" class="logo">
                     <span>Milble</span>
-                </div>
+                </a>
                 {% if user.is_authenticated %}
                 <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
                 {% else %}
@@ -125,7 +128,7 @@
             <div class="post-list">
                 {% for post in posts %}
                 <div class="post-item">
-                    <div class="post-title">{{ post.title }}</div>
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
                     <div class="post-meta">
                         <span class="post-author">작성자: {{ post.author }}</span>
                         <span class="post-date">{{ post.created_at|date:"Y-m-d" }}</span>

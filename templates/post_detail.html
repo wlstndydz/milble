@@ -14,7 +14,7 @@
             font-family: 'Noto Sans KR', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f2f2f2;
+            background-color: #ffffff;
             color: #333;
         }
         .head-container {
@@ -42,6 +42,7 @@
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
             letter-spacing: 2px;
+            text-decoration: none; /* 밑줄 제거 */
         }
         .logo-icon {
             margin-right: 0.5rem;
@@ -62,13 +63,12 @@
             margin: 0 auto;
             padding: 20px;
             background-color: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
         }
         .breadcrumb {
             font-size: 16px;
             color: #666;
             margin-bottom: 16px;
-            font-weight: bold; /* 볼드체로 설정 */
+            font-weight: bold;
         }
         .breadcrumb span {
             color: #2563eb;
@@ -84,8 +84,8 @@
             color: #666;
             font-size: 14px;
             margin-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb; /* 구분선 추가 */
-            padding-bottom: 30px; /* 구분선과 내용 사이의 여백 */
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 30px;
         }
         .post-meta > * {
             margin-right: 8px;
@@ -94,7 +94,7 @@
             color: #2563eb;
             font-weight: 500;
         }
-        .unit{
+        .unit {
             color: #2563eb;
             font-weight: 500;
         }
@@ -106,6 +106,7 @@
         .comments-section {
             border-top: 1px solid #e5e7eb;
             padding-top: 24px;
+            max-width: 100%;
         }
         .comments-title {
             font-size: 18px;
@@ -116,8 +117,8 @@
             background-color: #ffffff;
             padding: 8px;
             border-radius: 8px;
-            margin-bottom: 8px;
-            position: relative; /* 상대 위치로 설정 */
+            position: relative;
+            margin-bottom: 10px;
         }
         .comment-meta {
             display: flex;
@@ -133,49 +134,102 @@
             line-height: 1.5;
             margin-bottom: 10px;
         }
-        .comment-form textarea {
-            width: 100%;
-            padding: 8px; /* 패딩 줄임 */
-            border: 1px solid #d1d5db;
-            border-radius: 4px; /* 둥근 모서리 더 작게 */
-            font-size: 14px; /* 글씨 크기 줄임 */
-            margin-bottom: 10px; /* 마진 줄임 */
-            box-sizing: border-box;
-            resize: none; /* 크기 조절 비활성화 (원하는 경우) */          
-        }
-        .submit-btn {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+        .comment-form {
+            margin-top: 10px;
+            background-color: #ffffff;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
+            padding: 0px;
+            max-width: 100%;
+        }
+        .comment-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .comment-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: none;
+            font-size: 14px;
+            outline: none;
+        }
+        .comment-submit-btn {
+            background-color: transparent;
+            border: none;
+            padding: 8px 12px;
             cursor: pointer;
-            width: 100%;
+            color: #2563eb;
+            transition: color 0.2s;
+        }
+        .comment-submit-btn:hover {
+            color: #1d4ed8;
+        }
+        .reply-input {
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
         }
         .reply-btn {
             font-family: 'Noto Sans KR', Arial, sans-serif;
-            display: inline-block; /* 기본적으로 숨김 */
-            position: absolute; /* 절대 위치로 설정 */
-            right: 16px; /* 오른쪽 여백 */
-            top: 16px; /* 위쪽 여백 */
+            display: inline-block;
+            position: absolute;
+            right: 16px;
+            top: 16px;
             cursor: pointer;
-            background-color: #ffffff;
-            color: black;
+            background-color: transparent;
+            color: #2563eb;
             padding: 5px 10px;
             border-radius: 5px;
-            font-size: 12px;
-            border: 1px solid white; /* 테두리를 흰색으로 설정 */
+            font-size: 14px;
+            border: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
         }
-        .reply-form {
-            display: none;
-            margin-top: 10px;
+        .reply-btn:hover {
+            color: #1d4ed8;
         }
-        .reply{
-            background: #F2F2F2;
+        .reply-form-inner {
+            display: flex;
+            flex-direction: column;
+        }
+        .reply-form{
+            margin-bottom: 10px;
+        }
+        .reply-submit-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+        }
+        .reply-submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .reply {
+            background: #F7F7F7;
             padding: 8px;
             padding-left: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .comment-container {
+            border-bottom: 1px solid #e5e7eb;
+        
+        }
+        .comment-list {
+            padding-left: 0;
+            list-style-type: none;
+            margin-bottom: 0px;
         }
     </style>
 </head>
@@ -183,9 +237,9 @@
     <header>
         <div class="head-container">
             <div class="header-content">
-                <div class="logo">
+                <a href="{% url 'index' %}" class="logo">
                     <span>Milble</span>
-                </div>
+                </a>
                 {% if user.is_authenticated %}
                 <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
                 {% else %}
@@ -215,26 +269,30 @@
             <ul class="comment-list">
                 {% for comment in comments %}
                 <div class="comment">
-                    <div class="comment-meta">
-                        <span class="unit">{{ comment.unit }}</span>
-                        <span class="author">{{ comment.author|mask_author }}</span>
+                    <div class="comment-container">
+                        <div class="comment-meta">
+                            <span class="unit">{{ comment.unit }}</span>
+                            <span class="author">{{ comment.author|mask_author }}</span>
+                        </div>
+                        <div class="comment-content">
+                            {{ comment.content }}
+                        </div>
+                        <button class="reply-btn" onclick="toggleReplyForm({{ comment.id }})">
+                            <i class="fas fa-comment-alt"></i>
+                        </button>
+                        <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
+                            <form method="post" class="reply-form-inner">
+                                {% csrf_token %}
+                                <div class="comment-input-wrapper">
+                                    <input type="text" name="content" placeholder="대댓글을 입력하세요" class="comment-input">
+                                    <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                    <button type="submit" name="reply-submit" class="comment-submit-btn">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="comment-content">
-                        {{ comment.content }}
-                    </div>
-                    <button class="reply-btn" onclick="toggleReplyForm({{ comment.id }})">대댓글 달기</button> <!-- 버튼 위치 변경 -->
-
-                    <!-- 대댓글 폼 -->
-                    <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
-                        <form method="post">
-                            {% csrf_token %}
-                            <textarea name="content" rows="3" placeholder="대댓글을 입력하세요"></textarea>
-                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
-                            <button type="submit" name="reply-submit" class="submit-btn">대댓글 작성</button>
-                        </form>
-                    </div>
-
-                    <!-- 대댓글 리스트 -->
                     {% for reply in comment.replies.all %}
                     <div class="reply">
                         <div class="comment-meta">
@@ -247,19 +305,22 @@
                     </div>
                     {% endfor %}
                 </div>
-        {% endfor %}
+                {% endfor %}
             </ul>
             {% if user.is_authenticated %}
             <form method="post" class="comment-form">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" name="comment-submit" class="submit-btn">댓글 작성</button>
+                <div class="comment-input-wrapper">
+                    <input type="text" name="content" placeholder="댓글을 입력하세요" class="comment-input">
+                    <button type="submit" name="comment-submit" class="comment-submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
             </form>
             {% else %}
             <p>댓글을 작성하려면 <a href="{% url 'login' %}">로그인</a> 해주세요.</p>
             {% endif %}
         </div>
-
     </div>
     <script>
         function toggleReplyForm(commentId) {
@@ -271,16 +332,16 @@
             }
         }
         document.addEventListener("DOMContentLoaded", function() {
-            const commentForm = document.querySelector(".comment-form");
-            const textarea = commentForm.querySelector("textarea[name='content']");
-            const submitButton = commentForm.querySelector("button[type='submit']");
-
-            commentForm.addEventListener("submit", function(event) {
-                if (textarea.value.trim() === "") {  // 공백 체크
-                    event.preventDefault();  // 기본 제출 동작 방지
-                    alert("댓글 내용을 입력해주세요.");  // 사용자에게 알림
-                    textarea.focus();  // 텍스트 영역에 포커스
-                }
+            const commentForms = document.querySelectorAll(".comment-form, .reply-form-inner");
+            commentForms.forEach(form => {
+                const input = form.querySelector("input[name='content']");
+                form.addEventListener("submit", function(event) {
+                    if (input.value.trim() === "") {
+                        event.preventDefault();
+                        alert("댓글 내용을 입력해주세요.");
+                        input.focus();
+                    }
+                });
             });
         });
     </script>
