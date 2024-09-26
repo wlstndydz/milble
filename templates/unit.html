@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milble - 성격유형 게시판</title>
+    <title>Milble - 부대 게시판</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -22,11 +22,28 @@
             background-color: white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+        .login-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
+            position: relative;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+            position: absolute;
+            right: 20px;
         }
         .logo {
             display: flex;
@@ -39,17 +56,7 @@
             letter-spacing: 2px;
             text-decoration: none; /* 밑줄 제거 */
         }
-        .login-btn {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .category-title {
+        .unit-title {
             font-size: 2rem;
             font-weight: bold;
             margin: 2rem 0;
@@ -83,7 +90,7 @@
             color: #6b7280;
             font-size: 0.9rem;
         }
-        .post-author, .post-date, .post-views {
+        .post-author, .post-date {
             margin-right: 1rem;
         }
         .pagination {
@@ -114,17 +121,20 @@
                 <a href="{% url 'index' %}" class="logo">
                     <span>Milble</span>
                 </a>
-                {% if user.is_authenticated %}
-                <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
-                {% else %}
-                <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
-                {% endif %}
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                    <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                    <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                    {% else %}
+                    <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <h1 class="category-title">{{ category_name }}</h1>
+        <h1 class="unit-title">{{ unit_name }}</h1>
             <div class="post-list">
                 {% for post in posts %}
                 <div class="post-item">

@@ -34,7 +34,6 @@
             white-space: nowrap;
             margin: 0 auto;
             letter-spacing: 0.15em;
-      
         }
         .login-btn {
             font-family: 'Noto Sans KR', Arial, sans-serif;
@@ -51,15 +50,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
-            position: relative; /* 추가 */
+            position: relative;
         }
         .header-buttons {
-            display: flex; /* 추가 */
-            gap: 0.5rem; /* 버튼 사이의 간격 추가 */
-            position: absolute; /* 추가 */
-            right: 20px; /* 오른쪽 정렬 */
+            display: flex;
+            gap: 0.5rem;
+            position: absolute;
+            right: 20px;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -69,11 +67,7 @@
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-decoration: none; /* 밑줄 제거 */
-        }
-        .logo-icon {
-            margin-right: 0.5rem;
-            font-size: 2rem;
+            text-decoration: none;
         }
         .search-container {
             max-width: 600px;
@@ -94,16 +88,27 @@
             transform: translateY(-50%);
             color: #9ca3af;
         }
-        .categories {
+
+        /* units-list는 스크롤 가능하게 설정 */
+        .units {
+            display: flex;
+            align-items: center;
             background-color: white;
-            padding: 10px;
-            overflow-x: auto;
-            white-space: nowrap;
             margin-bottom: 2rem;
             border-bottom: 1px solid #e5e7eb;
+            justify-content: space-between;
         }
-        .category-btn {
+        .units-list {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+        }
+        .unit-btn {
             display: inline-block;
+            font-family: Arial, sans-serif;
             padding: 0.5rem 1rem;
             margin-right: 0.5rem;
             background-color: #ffffff;
@@ -111,24 +116,55 @@
             border-radius: 1rem;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px; /* 글자 크기를 조정하여 버튼 크기를 키울 수 있음 */
+            font-size: 16px;
         }
-        .category-btn:hover {
-        background-color: #f0f0f0; /* 마우스를 올렸을 때의 배경색 */
-        border-color: #ccc; /* 선택적으로 테두리 색도 변경 가능 */
+        .unit-btn:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
         }
-        .post-categories {
+        /* 부대 추가 및 가입 버튼 */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .add-unit-btn, .join-unit-btn {
+            background-color: #2563eb;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem 0.5rem 2rem;
+            position: relative;
+            flex-shrink: 0;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .add-unit-btn:hover, .join-unit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .add-unit-btn::before, .join-unit-btn::before {
+            content: '+';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-35%);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .post-units {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
             gap: 2rem;
         }
-        .post-category {
+        .post-unit {
             background-color: white;
             border-radius: 0.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             padding: 1rem;
         }
-        .post-category h2 {
+        .post-unit h2 {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -136,7 +172,7 @@
             margin-bottom: 1rem;
             font-size: 1.2rem;
         }
-        .post-category h2 a {
+        .post-unit h2 a {
             color: #6b7280;
             text-decoration: none;
             font-size: 0.9rem;
@@ -155,15 +191,14 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            text-decoration: none; /* 밑줄 제거 */
-            color: inherit; /* 텍스트 색상 상속 */
+            text-decoration: none;
+            color: inherit;
         }
         .post-views {
             color: #6b7280;
             font-size: 0.8rem;
             white-space: nowrap;
         }
-
     </style>
 </head>
 <body>
@@ -173,43 +208,52 @@
                 <a href="{% url 'index' %}" class="logo">
                     <span>Milble</span>
                 </a>
-                <div class="header-buttons"> <!-- 추가된 부분 -->
+                <div class="header-buttons">
                     {% if user.is_authenticated %}
                     <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
                     <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
                     {% else %}
                     <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
                     {% endif %}
-                </div> <!-- 추가된 부분 -->
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <h1 class="main-title">현역 군인 익명 커뮤니티 - MILBLE</h1>
+        <h1 class="main-title">현역 부대 익명 커뮤니티 - MILBLE</h1>
         <div class="search-container">
             <input type="search" class="search-input" placeholder="관심있는 주제를 검색해보세요">
             <span class="search-icon">🔍</span>
         </div>
 
-        <div class="categories">
-                {% for category in categories %}
-                <button class=category-btn onclick="window.location.href='{% url 'category_posts' category.name %}'">{{ category.name }}</button>
+        <!-- 부대 리스트와 버튼 영역 분리 -->
+        <div class="units">
+            <div class="units-list">
+                {% for unit in units %}
+                    <button class="unit-btn" onclick="window.location.href='{% url 'unit_posts' unit.name %}'">{{ unit.name }}</button>
                 {% endfor %}
+            </div>
+            <div class="action-buttons">
+                {% if user.is_authenticated and not user.unit %}
+                    <button class="join-unit-btn" onclick="window.location.href='{% url 'join_unit' %}'">가입</button>
+                    <button class="add-unit-btn" onclick="window.location.href='{% url 'create_unit' %}'">추가</button>
+                {% endif %}
+            </div>
         </div>
 
-        <div class="post-categories">
-            {% for category, posts in posts_by_category.items %}
-            <div class="post-category">
+        <div class="post-units">
+            {% for unit, posts in posts_by_unit.items %}
+            <div class="post-unit">
                 <h2>
-                    <span>{{ category.name }}</span>
-                    <a href="{% url 'category_posts' category_name=category.name %}" class="more-link">더보기 ></a>
+                    <span>{{ unit.name }}</span>
+                    <a href="{% url 'unit_posts' unit_name=unit.name %}" class="more-link">더보기 ></a>
                 </h2>
                 <ul class="post-list">
                     {% for post in posts %}
-            <li class="post-item">
-                <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
-            </li>
+                    <li class="post-item">
+                        <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                    </li>
                     {% empty %}
                     <li>게시물이 없습니다.</li>
                     {% endfor %}
@@ -221,7 +265,7 @@
 
     <script>
         // 여기에 필요한 JavaScript 코드를 추가할 수 있습니다.
-        // 예: 카테고리 버튼 클릭 이벤트 처리, 검색 기능 구현 등
+        // 예: 부대 버튼 클릭 이벤트 처리, 검색 기능 구현 등
     </script>
 </body>
 </html>

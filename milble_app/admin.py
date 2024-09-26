@@ -2,8 +2,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from .models import CustomUser, SignupRequest
-from .models import Category, Post, Comment, Reply
-from .models import UnitRequest, Unit
+from .models import Post, Comment, Reply
+from .models import Unit
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -12,9 +12,9 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(SignupRequest)
 class SignupRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'approved', 'verification_image', 'unit')
-    list_filter = ('approved', 'unit')
-    search_fields = ('id', 'unit')
+    list_display = ('id', 'approved', 'verification_image')
+    list_filter = ('approved',)
+    search_fields = ('id',)
 
     actions = ['approve_requests']
 
@@ -24,7 +24,6 @@ class SignupRequestAdmin(admin.ModelAdmin):
                 # CustomUser 객체 생성
                 user = CustomUser(
                     username=signup_request.id,
-                    unit=signup_request.unit,
                 )
                 user.set_password(signup_request.password)  # 비밀번호 암호화
                 user.save()
@@ -38,25 +37,8 @@ class SignupRequestAdmin(admin.ModelAdmin):
     
     approve_requests.short_description = "Approve selected requests"
     
-@admin.register(UnitRequest)
-class UnitRequestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'approved')  # approved 필드 사용
-    search_fields = ('name',)
-    actions = ['approve_requests']
-
-    def approve_requests(self, request, queryset):
-        for unit_request in queryset:
-            if not Unit.objects.filter(name=unit_request.name).exists():
-                Unit.objects.create(name=unit_request.name)
-
-            unit_request.delete()
-
-        self.message_user(request, "Selected requests have been approved and deleted.")
-    
-    approve_requests.short_description = "Approve selected unit requests"
 
 admin.site.register(Unit)
-admin.site.register(Category)
 admin.site.register(Post)
 admin.site.register(Comment)
 admin.site.register(Reply)

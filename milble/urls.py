@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
@@ -31,7 +30,8 @@ urlpatterns = [
     path('my_profile/', views.profile_view, name='profile'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('post/new/', views.post_create, name='post_create'),  # 게시물 작성 URL
-    path('category/<str:category_name>/', views.category_view, name='category_posts'),
+    path('unit/<str:unit_name>/', views.unit_view, name='unit_posts'),
     path('post/<int:post_id>/', views.post_detail, name='post_detail'),
-    path('create-unit/', views.unit_create_view, name='create_unit')
+    path('create-unit/', views.unit_create_view, name='create_unit'),
+    path('join/', views.join_unit_view, name='join_unit')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

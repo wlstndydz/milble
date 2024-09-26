@@ -8,17 +8,21 @@ from .forms import LoginForm  # 여기서 LoginForm을 임포트
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
-from .models import Category, Post, Comment # Category 모델 임포트 추가
+from .models import Post, Comment # Category 모델 임포트 추가
 from django.shortcuts import get_object_or_404
 from .forms import CommentForm, ReplyForm
 from .models import CustomUser
 from django.http import HttpResponseForbidden
-from .models import Unit, UnitRequest
+from .models import Unit
+from .forms import UnitForm
+from .forms import UnitSearchForm, UnitJoinForm
+
 
 def index(request):
-    categories = Category.objects.all()  # 모든 카테고리 가져오기
-    posts_by_category = {category: Post.objects.filter(category=category) for category in categories}  # 카테고리별 게시물 가져오기
-    return render(request, 'index.html', {'categories': categories, 'posts_by_category': posts_by_category})
+    units = Unit.objects.all()  # 모든 부대 가져오기
+    posts_by_unit = {unit: Post.objects.filter(unit=unit) for unit in units}  # 부대별 게시물 가져오기
+    return render(request, 'index.html', {'units': units, 'posts_by_unit': posts_by_unit})
+
 
 def signup_request_view(request):
     if request.method == 'POST':
@@ -83,10 +87,10 @@ def post_create(request):
 
     return render(request, 'post_form.html', {'form': form})
 
-def category_view(request, category_name):
-    # 주어진 카테고리에 해당하는 게시물 가져오기
-    posts = Post.objects.filter(category__name=category_name)  # 카테고리 이름으로 필터링
-    return render(request, 'category.html', {'posts': posts, 'category_name': category_name})
+def unit_view(request, unit_name):
+    # 주어진 부대에 해당하는 게시물 가져오기
+    posts = Post.objects.filter(unit__name=unit_name)  # 부대 이름으로 필터링
+    return render(request, 'unit.html', {'posts': posts, 'unit_name': unit_name})
 
 
 def post_detail(request, post_id):
@@ -137,20 +141,57 @@ def post_detail(request, post_id):
     return render(request, 'post_detail.html', context)
 
 def unit_create_view(request):
-    
-    units = Unit.objects.all()  # 모든 부대 가져오기
-    
     if request.method == 'POST':
-        unit_name = request.POST.get('name')
-        if unit_name:
-            # 이미 등록된 부대 이름인지 확인
-            if Unit.objects.filter(name=unit_name).exists():
-                return render(request, 'create_unit.html', {'error': '부대 이름이 이미 등록되어 있습니다.'})
-            else:
-                if not UnitRequest.objects.filter(name=unit_name).exists():
-                    UnitRequest.objects.create(name=unit_name)
-                    return redirect('signup_request')
+        form = UnitForm(request.POST)
+        if form.is_valid():
+            # 부대 저장
+            unit = form.save()
+            
+            # 생성한 부대에 자동으로 사용자 가입
+            user = request.user
+            user.unit = unit
+            user.save()
+
+            # 성공 시 리디렉션 (메인 페이지로 이동)
+            return redirect('/')
+    else:
+        form = UnitForm()
+
+    return render(request, 'create_unit.html', {'form': form})
+
+#부대 가입
+def join_unit_view(request):
+    search_form = UnitSearchForm(request.GET or None)
+    join_form = None
+    unit = None
+
+    if search_form.is_valid():
+        query = search_form.cleaned_data['query']
+        units = Unit.objects.filter(name__icontains=query)  # 부대명 검색
+
+        # 부대 선택 후 질문 표시
+        if 'unit_id' in request.GET:
+            unit_id = request.GET.get('unit_id')
+            unit = get_object_or_404(Unit, id=unit_id)
+            join_form = UnitJoinForm(request.POST or None)
+
+            if request.method == 'POST' and join_form.is_valid():
+                # 답변 검증 로직
+                if (unit.answer1 == join_form.cleaned_data['answer1'] and
+                    unit.answer2 == join_form.cleaned_data['answer2'] and
+                    unit.answer3 == join_form.cleaned_data['answer3']):
+                    # 가입 처리 (유저와 부대 연결)
+                    request.user.unit = unit
+                    request.user.save()
+                    return render(request, 'index')
                 else:
-                    return redirect('signup_request')    # 중복된 이름일 경우 처리
-    
-    return render(request, 'create_unit.html', {'units': units})
+                    join_form.add_error(None, '답변이 일치하지 않습니다.')
+    else:
+        units = None
+
+    return render(request, 'join_unit.html', {
+        'search_form': search_form,
+        'join_form': join_form,
+        'units': units,
+        'selected_unit': unit
+    })

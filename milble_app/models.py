@@ -3,15 +3,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 
-class UnitRequest(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    approved = models.BooleanField(default=False)  # 승인 상태 필드 추가
-
-    def __str__(self):
-        return self.name
-    
 class Unit(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=100, unique=True)
+    
+    answer1 = models.CharField(max_length=255, blank=False)
+    answer2 = models.CharField(max_length=255, blank=False)
+    answer3 = models.CharField(max_length=255, blank=False)
 
     def __str__(self):
         return self.name
@@ -25,17 +22,9 @@ class SignupRequest(models.Model):
     password = models.CharField(max_length=128)  # 비밀번호 (암호화된 상태로 저장)
     verification_image = models.ImageField(upload_to='verification_images/')  # 인증사진 업로드
     approved = models.BooleanField(default=False)  # 요청 승인 상태
-    unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.id
-    
-    
-class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
     
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -43,8 +32,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=100)  # 글쓴이
-    unit = models.CharField(max_length=100)  # 부대 소속
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

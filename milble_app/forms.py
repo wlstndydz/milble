@@ -2,14 +2,31 @@
 from django import forms
 from .models import SignupRequest
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Post, Category, Comment, Reply
+from .models import Post, Comment, Reply, Unit
 
+class UnitForm(forms.ModelForm):
+    class Meta:
+        model = Unit
+        fields = ['name', 'answer1', 'answer2', 'answer3']
+        labels = {
+            'name': '전체 부대명',
+            'answer1': '질문1에 대한 답',
+            'answer2': '질문2에 대한 답',
+            'answer3': '질문3에 대한 답',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': '예) 1사단 11여단 1대대 1중대'}),
+            'answer1': forms.TextInput(attrs={'placeholder': '예) 22생활관'}),
+            'answer2': forms.TextInput(attrs={'placeholder': '예) 홍길동'}),
+            'answer3': forms.TextInput(attrs={'placeholder': '예) 12대'}),
+        }
+        
 class SignupRequestForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")  # 비밀번호 확인 필드 추가
 
     class Meta:
         model = SignupRequest
-        fields = ['id', 'password', 'password2', 'unit', 'verification_image']
+        fields = ['id', 'password', 'password2', 'verification_image']
         widgets = {
             'password': forms.PasswordInput(),
         }
@@ -20,7 +37,6 @@ class SignupRequestForm(forms.ModelForm):
         self.fields['password'].label = "비밀번호"  # 라벨 한글로 설정
         self.fields['password2'].label = "비밀번호 확인"
         self.fields['verification_image'].label = "현역병 인증 사진"  # 라벨 한글로 설정
-        self.fields['unit'].label = "부대 소속"  # 라벨 한글로 설정
 
     def clean_id(self):
         id = self.cleaned_data.get('id')
@@ -37,13 +53,6 @@ class SignupRequestForm(forms.ModelForm):
             raise forms.ValidationError("두 비밀번호가 일치하지 않습니다.")
         
         return cleaned_data
-
-    def clean_unit(self):
-        unit = self.cleaned_data.get('unit')
-        if not unit:
-            raise forms.ValidationError("부대 소속은 필수 입력 사항입니다.")
-        return unit
-
 
 
 class LoginForm(forms.Form):
@@ -90,3 +99,12 @@ class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ['content']
+        
+class UnitSearchForm(forms.Form):
+    query = forms.CharField(label='부대 검색', max_length=100, 
+                            widget=forms.TextInput(attrs={'placeholder': '부대명 검색'}))
+
+class UnitJoinForm(forms.Form):
+    answer1 = forms.CharField(label='질문 1', max_length=255)
+    answer2 = forms.CharField(label='질문 2', max_length=255)
+    answer3 = forms.CharField(label='질문 3', max_length=255)

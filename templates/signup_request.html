@@ -182,9 +182,6 @@
                     {% if field.label == "현역병 인증 사진" %}  <!-- 인증 사진 필드에만 적용 -->
                          <button type="button" class="info-icon" onclick="showVerificationPopup()">?</button>
                     {% endif %}
-                    {% if field.label == "부대 소속" %}  
-                         <button type="button" class="info-icon" onclick="showUnitPopup()">?</button>
-                    {% endif %}
             </label>
                 {{ field }}
                 {% if field.errors %}
@@ -193,19 +190,6 @@
             {% endfor %}
             <button type="submit">가입 신청</button>
         </form>
-    </div>
-    
-    <!-- Unit Popup (부대 소속 팝업) -->
-    <div id="unit-popup" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="closeUnitPopup()">&times;</span>
-            <p>
-                찾으시는 부대가 없다면 하단 링크를 통해서 직접 등록할 수 있습니다.<br>
-                한번 등록하게 되면, 변경이 어려우니 신중하게 부탁드릴게요.
-            </p>
-             <a href="{% url 'create_unit' %}" class="register-unit-link">부대 등록하기</a>
-            <!-- 추가 설명 -->
-        </div>
     </div>
     
     <!-- Verification Popup (현역병 인증 사진 팝업) -->
