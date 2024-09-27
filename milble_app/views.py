@@ -18,10 +18,45 @@ from .forms import UnitForm
 from .forms import UnitSearchForm, UnitJoinForm
 
 
+from django.shortcuts import render
+from .models import Unit, Post
+
 def index(request):
-    units = Unit.objects.all()  # 모든 부대 가져오기
-    posts_by_unit = {unit: Post.objects.filter(unit=unit) for unit in units}  # 부대별 게시물 가져오기
-    return render(request, 'index.html', {'units': units, 'posts_by_unit': posts_by_unit})
+    # 인기 게시물: 좋아요 또는 댓글 순으로 5개
+    popular_posts = Post.objects.all().order_by('-views')[:5]
+
+    # 사용자 로그인 확인 및 소속 부대의 게시물 가져오기
+    user_unit_posts = None
+    if request.user.is_authenticated and request.user.unit:
+        user_unit = request.user.unit
+        print(Post.objects.filter(unit=user_unit))
+        # 우리부대 게시물: 좋아요 순으로 2개, 최신순으로 3개
+        # 인기 게시물 2개
+        popular_user_unit_posts = Post.objects.filter(unit=user_unit).order_by('-views')[:2]
+        print(popular_user_unit_posts)
+
+
+
+        # 최근 게시물에서 인기 게시물 제외
+        recent_user_unit_posts = Post.objects.filter(unit=user_unit).exclude(id__in=popular_user_unit_posts.values_list('id', flat=True)).order_by('-created_at')[:3]
+
+        user_unit_posts = {
+            'popular': popular_user_unit_posts,
+            'recent': recent_user_unit_posts
+        }
+
+    # 부대별 게시물 가져오기
+    units = Unit.objects.all()
+    unit_posts = {}
+    for unit in units:
+        unit_posts[unit] = Post.objects.filter(unit=unit).order_by('-created_at')[:5]  # 각 부대별 상위 5개 게시물
+
+    return render(request, 'index.html', {
+        'popular_posts': popular_posts,
+        'user_unit_posts': user_unit_posts,
+        'unit_posts': unit_posts  # 부대별 게시물 추가
+    })
+
 
 
 def signup_request_view(request):
@@ -87,40 +122,72 @@ def post_create(request):
 
     return render(request, 'post_form.html', {'form': form})
 
-def unit_view(request, unit_name):
-    # 주어진 부대에 해당하는 게시물 가져오기
-    posts = Post.objects.filter(unit__name=unit_name)  # 부대 이름으로 필터링
-    return render(request, 'unit.html', {'posts': posts, 'unit_name': unit_name})
+def unit_posts_view(request, unit_name):
+    # unit_name에 해당하는 부대 정보를 가져옵니다.
+    unit = get_object_or_404(Unit, name=unit_name)
+    
+    # 해당 부대의 게시물들을 가져옵니다.
+    posts = Post.objects.filter(unit=unit).order_by('-created_at')  # 최신순으로 정렬
+
+    # 모든 부대 정보를 가져오되, 현재 부대(unit)를 제외합니다.
+    units = Unit.objects.exclude(name=request.user.unit)
+    
+    return render(request, 'unit_posts.html', {
+        'current_unit': unit,  # 현재 선택된 부대
+        'posts': posts,
+        'units': units,  # 부대 리스트
+        'user': request.user  # 로그인 여부 및 유저 정보 확인
+    })
+
+
+def popular_posts_view(request):
+    # 좋아요와 댓글 수를 기준으로 인기 게시물 정렬
+    popular_posts = Post.objects.all().order_by('-likes', '-comments')  # 좋아요, 댓글 수 기준으로 정렬
+    
+    # 모든 부대 목록 가져오기
+    units = Unit.objects.all()
+
+    return render(request, 'popular_posts.html', {
+        'posts': popular_posts,
+        'units': units,  # 부대 목록 전달
+    })
 
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()  # 해당 게시물에 달린 모든 댓글을 가져옴
 
+    # 조회수 업데이트
+    post.views += 1
+    post.save()
+
     if request.method == "POST":
-        # 로그인된 사용자의 CustomUser 객체를 가져옴
-        custom_user = request.user  # request.user는 현재 로그인한 CustomUser 객체
+        custom_user = request.user  # 로그인된 사용자의 CustomUser 객체
 
         # 댓글 작성 처리
         if 'comment-submit' in request.POST:
             form = CommentForm(request.POST)
             if form.is_valid():
-                comment = form.save(commit=False)  # 아직 DB에 저장하지 않음
-                comment.post = post  # 댓글이 달리는 게시물 정보
-                comment.author = custom_user.username  # 로그인된 사용자의 username을 author로 설정
-                comment.unit = custom_user.unit  # 사용자의 부대 소속 (CustomUser에서 가져옴)
-                comment.save()  # 댓글 저장
+                comment = form.save(commit=False)
+                comment.post = post
+                comment.author = custom_user.username
+                comment.unit = custom_user.unit
+                comment.save()
+                
+                # Update the comment count on the post
+                post.comments_count += 1  # Assuming you have a comments_count field in Post model
+                post.save()
                 return redirect('post_detail', post_id=post_id)
 
         # 대댓글 작성 처리
         elif 'reply-submit' in request.POST:
             reply_form = ReplyForm(request.POST)
-            comment_id = request.POST.get('comment_id')  # 대댓글이 달린 댓글의 ID
+            comment_id = request.POST.get('comment_id')
             comment = get_object_or_404(Comment, id=comment_id)
 
             if reply_form.is_valid():
                 reply = reply_form.save(commit=False)
-                reply.comment = comment  # 대댓글이 달릴 댓글 정보
+                reply.comment = comment
                 reply.author = custom_user.username
                 reply.unit = custom_user.unit
                 reply.save()
@@ -140,6 +207,24 @@ def post_detail(request, post_id):
     }
     return render(request, 'post_detail.html', context)
 
+#좋아요기능
+def post_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    user = request.user
+
+    if user.is_authenticated:
+        if user in post.liked_users.all():
+            # 이미 좋아요를 누른 경우 -> 좋아요 취소
+            post.liked_users.remove(user)
+            post.likes -= 1
+        else:
+            # 좋아요를 누르지 않은 경우 -> 좋아요 추가
+            post.liked_users.add(user)
+            post.likes += 1
+        post.save()
+
+    return redirect('post_detail', post_id=post_id)
+
 def unit_create_view(request):
     if request.method == 'POST':
         form = UnitForm(request.POST)
@@ -155,9 +240,13 @@ def unit_create_view(request):
             # 성공 시 리디렉션 (메인 페이지로 이동)
             return redirect('/')
     else:
+        units = Unit.objects.all()
         form = UnitForm()
 
-    return render(request, 'create_unit.html', {'form': form})
+    return render(request, 'create_unit.html', {
+        'form': form,
+        'units': units
+    })
 
 #부대 가입
 def join_unit_view(request):

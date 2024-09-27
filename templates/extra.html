@@ -1,0 +1,79 @@
+        /* units-list는 스크롤 가능하게 설정 */
+        .units {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            justify-content: space-between;
+        }
+        .units-list {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+        }
+        .unit-btn {
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .unit-btn:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+        /* 부대 추가 및 가입 버튼 */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .add-unit-btn, .join-unit-btn {
+            background-color: #2563eb;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem 0.5rem 2rem;
+            position: relative;
+            flex-shrink: 0;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .add-unit-btn:hover, .join-unit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .add-unit-btn::before, .join-unit-btn::before {
+            content: '+';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-35%);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+<!-- 부대 리스트와 버튼 영역 분리 -->
+        <div class="units">
+            <div class="units-list">
+                {% for unit in units %}
+                    <button class="unit-btn" onclick="window.location.href='{% url 'unit_posts' unit.name %}'">{{ unit.name }}</button>
+                {% endfor %}
+            </div>
+            <div class="action-buttons">
+                {% if user.is_authenticated and not user.unit %}
+                    <button class="join-unit-btn" onclick="window.location.href='{% url 'join_unit' %}'">가입</button>
+                    <button class="add-unit-btn" onclick="window.location.href='{% url 'create_unit' %}'">추가</button>
+                {% endif %}
+            </div>
+        </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Noto Sans KR', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #ffffff;
@@ -16,7 +16,6 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            margin-bottom: 20px;
             padding: 0 20px;
         }
         header {
@@ -26,17 +25,14 @@
         .main-title {
             font-size: 2rem;
             width: 100%;
-            font-family: 'Noto Sans KR', sans-serif;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 2rem;
+            margin: 2rem 0;
             overflow: hidden;
             white-space: nowrap;
-            margin: 0 auto;
             letter-spacing: 0.15em;
         }
         .login-btn {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
             background-color: #2563eb;
             color: white;
             border: none;
@@ -50,13 +46,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
-            position: relative;
         }
         .header-buttons {
             display: flex;
             gap: 0.5rem;
-            position: absolute;
-            right: 20px;
         }
         .logo {
             display: flex;
@@ -88,94 +81,17 @@
             transform: translateY(-50%);
             color: #9ca3af;
         }
-
-        /* units-list는 스크롤 가능하게 설정 */
-        .units {
-            display: flex;
-            align-items: center;
-            background-color: white;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #e5e7eb;
-            justify-content: space-between;
-        }
-        .units-list {
-            display: flex;
-            align-items: center;
-            background-color: white;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 10px;
-        }
-        .unit-btn {
-            display: inline-block;
-            font-family: Arial, sans-serif;
-            padding: 0.5rem 1rem;
-            margin-right: 0.5rem;
-            background-color: #ffffff;
-            border: 1px solid #d1d5db;
-            border-radius: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .unit-btn:hover {
-            background-color: #f0f0f0;
-            border-color: #ccc;
-        }
-        /* 부대 추가 및 가입 버튼 */
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .add-unit-btn, .join-unit-btn {
-            background-color: #2563eb;
-            border: 1px solid #d1d5db;
-            border-radius: 1rem;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem 0.5rem 2rem;
-            position: relative;
-            flex-shrink: 0;
-            font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        .add-unit-btn:hover, .join-unit-btn:hover {
-            background-color: #1d4ed8;
-        }
-        .add-unit-btn::before, .join-unit-btn::before {
-            content: '+';
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-35%);
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
         .post-units {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
-            gap: 2rem;
-        }
-        .post-unit {
             background-color: white;
             border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             padding: 1rem;
+            margin-bottom: 2rem;
         }
-        .post-unit h2 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0;
-            margin-bottom: 1rem;
+        .post-units h2 {
             font-size: 1.2rem;
-        }
-        .post-unit h2 a {
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
         }
         .post-list {
             list-style-type: none;
@@ -185,19 +101,105 @@
         .post-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            align-items: center;
+            padding-bottom: 0.75rem;
+        }
+        .post-item:last-child {
+            border-bottom: none;
         }
         .post-title {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
             text-decoration: none;
             color: inherit;
         }
-        .post-views {
+        .post-unit-tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+        }
+        .post-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.875rem;
             color: #6b7280;
-            font-size: 0.8rem;
-            white-space: nowrap;
+        }
+        /* 좋아요 및 댓글 아이콘과 숫자 정렬을 위한 추가 */
+        .post-stats .like-stat, .post-stats .comment-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 아이콘과 숫자 사이의 간격 */
+        }
+
+        .icon {
+            font-size: 1rem; /* 아이콘 크기 조정 */
+        }
+
+        .number {
+            display: inline-block;
+            min-width: 30px; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            text-align: left; /* 오른쪽 정렬 */
+        }
+        
+        .unit-posts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .unit-post {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .unit-post h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .unit-post-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .unit-post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+        .unit-post-title {
+            text-decoration: none;
+            color: inherit;
+        }
+        .unit-post-views {
+            display: inline-block;
+            min-width: 30px; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            text-align: left; /* 오른쪽 정렬 */
+            color: #6b7280;
+        }
+        .views-container {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 아이콘과 숫자 간격 */
+        }
+        .more-link {
+            font-size: 0.875rem;
+            color: #2563eb;
+            text-decoration: none;
+            margin-left: auto; /* 오른쪽 끝으로 밀기 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        .more-link:hover {
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        h2, h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
@@ -210,10 +212,12 @@
                 </a>
                 <div class="header-buttons">
                     {% if user.is_authenticated %}
-                    <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
-                    <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                        {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% endif %}
                     {% else %}
-                    <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
                     {% endif %}
                 </div>
             </div>
@@ -226,46 +230,102 @@
             <input type="search" class="search-input" placeholder="관심있는 주제를 검색해보세요">
             <span class="search-icon">🔍</span>
         </div>
-
-        <!-- 부대 리스트와 버튼 영역 분리 -->
-        <div class="units">
-            <div class="units-list">
-                {% for unit in units %}
-                    <button class="unit-btn" onclick="window.location.href='{% url 'unit_posts' unit.name %}'">{{ unit.name }}</button>
+        
+        <!-- 우리부대 게시물 섹션 -->
+        {% if user.is_authenticated and user.unit %}
+        <div class="post-units">
+            <h2>
+                우리부대
+                <a href="{% url 'unit_posts' user.unit.name %}" class="more-link">더보기 ></a>
+            </h2>
+            <ul class="post-list">
+                {% for post in user_unit_posts.popular %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span>🔥&nbsp;{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
                 {% endfor %}
-            </div>
-            <div class="action-buttons">
-                {% if user.is_authenticated and not user.unit %}
-                    <button class="join-unit-btn" onclick="window.location.href='{% url 'join_unit' %}'">가입</button>
-                    <button class="add-unit-btn" onclick="window.location.href='{% url 'create_unit' %}'">추가</button>
-                {% endif %}
-            </div>
+                {% for post in user_unit_posts.recent %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span>{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
+        {% endif %}
+
 
         <div class="post-units">
-            {% for unit, posts in posts_by_unit.items %}
-            <div class="post-unit">
-                <h2>
-                    <span>{{ unit.name }}</span>
-                    <a href="{% url 'unit_posts' unit_name=unit.name %}" class="more-link">더보기 ></a>
-                </h2>
-                <ul class="post-list">
+            <h2>
+                전체
+                  <a href="{% url 'popular_posts' %}" class="more-link">더보기 ></a> <!-- 더보기 URL 수정 -->
+            </h2>
+            <ul class="post-list">
+                {% for post in popular_posts %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span class="post-unit-tag" style="background-color: #e0f2fe; color: #0369a1;">{{ post.unit.name }}</span>
+                        <span>{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="unit-posts">
+            {% for unit, posts in unit_posts.items %}
+            <div class="unit-post">
+                <h3>
+                    {{ unit.name }}
+                     <a href="{% url 'unit_posts' unit.name %}" class="more-link">더보기 ></a> <!-- 더보기 추가 -->
+                </h3>
+                <ul class="unit-post-list">
                     {% for post in posts %}
-                    <li class="post-item">
-                        <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                    <li class="unit-post-item">
+                        <a href="{% url 'post_detail' post.id %}" class="unit-post-title">{{ post.title }}</a>
+                            <div class="views-container">
+                            <span class="icon">👀</span>
+                            <span class="unit-post-views">{{ post.views }}</span>
+                        </div>
                     </li>
-                    {% empty %}
-                    <li>게시물이 없습니다.</li>
                     {% endfor %}
                 </ul>
             </div>
             {% endfor %}
         </div>
     </main>
-
-    <script>
-        // 여기에 필요한 JavaScript 코드를 추가할 수 있습니다.
-        // 예: 부대 버튼 클릭 이벤트 처리, 검색 기능 구현 등
-    </script>
 </body>
 </html>

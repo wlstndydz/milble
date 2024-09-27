@@ -149,10 +149,6 @@
     </header>
 
     <div class="container">
-        <div class="breadcrumb">
-            홈 > <span>새 게시물 생성</span>
-        </div>
-
         <h1 class="post-title">새 게시물 생성</h1>
 
         <form method="POST">
@@ -161,8 +157,6 @@
             {{ form.title }}
             <label for="id_content">내용</label>
             {{ form.content }}
-            <label for="id_category_name">카테고리</label>
-            <input type="text" name="category_name" id="id_category_name" required>
             <div class="button-wrapper">
                 <button type="submit">게시물 생성</button>
             </div>

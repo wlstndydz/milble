@@ -21,12 +21,24 @@
             background-color: white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
-            position: relative;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
         }
         .logo {
             display: flex;
@@ -39,10 +51,6 @@
             letter-spacing: 2px;
             text-decoration: none;
         }
-        .header-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
         .btn {
             font-family: 'Noto Sans KR', Arial, sans-serif;
             background-color: #2563eb;
@@ -54,6 +62,7 @@
             font-weight: bold;
             text-decoration: none;
             display: inline-block;
+            margin-bottom: 8px;
         }
         .btn:hover {
             background-color: #1d4ed8;
@@ -131,10 +140,12 @@
                 </a>
                 <div class="header-buttons">
                     {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="btn">내정보</a>
-                    <a href="{% url 'post_create' %}" class="btn">글쓰기</a>
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                        {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% endif %}
                     {% else %}
-                    <a href="{% url 'login' %}" class="btn">로그인</a>
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
                     {% endif %}
                 </div>
             </div>
@@ -148,6 +159,7 @@
             <form method="GET" action="">
                 {{ search_form.as_p }}
                 <button type="submit" class="btn">부대 검색</button>
+                <button type="button" class="btn" onclick="window.location.href='{% url 'create_unit' %}'">부대 추가</button>
             </form>
         </div>
 

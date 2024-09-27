@@ -68,18 +68,13 @@ class LoginForm(forms.Form):
         return cleaned_data
     
 class PostForm(forms.ModelForm):
-    category_name = forms.CharField(max_length=100, required=True)  # 카테고리 이름 필드 추가
 
     class Meta:
         model = Post
         fields = ['title', 'content']  # unit과 author 필드는 제외
 
     def save(self, commit=True, user=None):
-        category_name = self.cleaned_data.pop('category_name')  # 카테고리 이름 가져오기
-        category, created = Category.objects.get_or_create(name=category_name)  # 카테고리 생성 또는 가져오기
-        
         post = super().save(commit=False)  # 게시물 객체 생성
-        post.category = category  # 카테고리 설정
 
         if user:
             post.author = user.username  # 현재 로그인한 사용자 이름 설정

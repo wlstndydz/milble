@@ -33,6 +33,10 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=100)  # 글쓴이
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    likes = models.PositiveIntegerField(default=0)  # 좋아요 수, 기본값 0
+    comments_count = models.PositiveIntegerField(default=0)  # 댓글 수, 기본값 0
+    views = models.PositiveIntegerField(default=0)  # 조회수, 기본값 0
+    liked_users = models.ManyToManyField('CustomUser', related_name='liked_posts', blank=True)  # 좋아요 누른 사용자들
 
     def __str__(self):
         return self.title
