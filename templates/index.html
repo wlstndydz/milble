@@ -236,7 +236,7 @@
         <div class="post-units">
             <h2>
                 우리부대
-                <a href="{% url 'unit_posts' user.unit.name %}" class="more-link">더보기 ></a>
+                <a href="{% url 'posts' user.unit.name %}" class="more-link">더보기 ></a>
             </h2>
             <ul class="post-list">
                 {% for post in user_unit_posts.popular %}
@@ -287,7 +287,42 @@
                 {% for post in popular_posts %}
                 <li class="post-item">
                     <a href="{% url 'post_detail' post.id %}" class="post-title">
-                        <span class="post-unit-tag" style="background-color: #e0f2fe; color: #0369a1;">{{ post.unit.name }}</span>
+                        <span class="post-unit-tag" style="background-color: #e0f2fe; color: #0369a1;">
+                            {% if post.unit %}
+                                {{ post.unit.name }}
+                            {% else %}
+                                {{ post.category.name }}
+                            {% endif %}
+                    </span>
+
+                        <span>{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        
+        <div class="post-units">
+            <h2>
+                자유
+                  <a href="{% url 'popular_posts' %}" class="more-link">더보기 ></a> <!-- 더보기 URL 수정 -->
+            </h2>
+            <ul class="post-list">
+                {% for post in category_posts %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span class="post-unit-tag" style="background-color: #e0f2fe; color: #0369a1;">{{ post.category.name }}</span>
                         <span>{{ post.title }}</span>
                     </a>
                     <div class="post-stats">
@@ -310,7 +345,7 @@
             <div class="unit-post">
                 <h3>
                     {{ unit.name }}
-                     <a href="{% url 'unit_posts' unit.name %}" class="more-link">더보기 ></a> <!-- 더보기 추가 -->
+                     <a href="{% url 'posts' unit.name %}" class="more-link">더보기 ></a> <!-- 더보기 추가 -->
                 </h3>
                 <ul class="unit-post-list">
                     {% for post in posts %}

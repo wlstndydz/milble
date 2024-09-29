@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milble - 전체 게시물</title>
+    <title>Milble - 게시판</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -58,6 +58,7 @@
             font-weight: bold;
             margin: 2rem 0;
             text-align: center;
+            height: 32px; 
         }
         .post-list {
             background-color: white;
@@ -149,22 +150,8 @@
             font-size: 16px;
         }
         .unit-btn:hover {
-            background-color: #2563eb;
+            background-color: #f0f0f0;
             border-color: #ccc;
-             color: white;
-        }
-        .popular-btn{
-            display: inline-block;
-            font-family: Arial, sans-serif;
-            color: white;
-            padding: 0.5rem 1rem;
-            margin-right: 0.5rem;
-            background-color: #2563eb;
-            border: 1px solid #d1d5db;
-            border-radius: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
         }
         /* 부대 추가 및 가입 버튼 */
         .action-buttons {
@@ -197,14 +184,27 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
-        .unit {
-            color: #2563eb;
-            font-weight: 500;
+        .selected-unit-btn{
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            background-color: #2563eb;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
         }
         .unit-author {
             display: flex; /* unit과 author를 수평으로 정렬 */
             gap: 0.5rem; /* 두 요소 사이의 간격 */
             align-items: center; /* 수직 정렬을 가운데로 */
+        }
+        .unit {
+            color: #2563eb;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -224,12 +224,16 @@
     </header>
 
     <main class="container">
-        <h1 class="unit-title">전체</h1> <!-- '인기'로 변경 -->
+        <!-- 현재 부대 또는 카테고리 이름을 표시 -->
+        <h1 class="unit-title">
+            {% if current_unit %}{{ current_unit.name }}{% elif current_category %}{{ current_category.name }}{% else %}전체 게시판{% endif %}
+        </h1>
         
-        <!-- 부대 리스트와 버튼 영역 분리 -->
+        <!-- 부대 및 카테고리 리스트와 버튼 영역 분리 -->
         <div class="units">
             <div class="units-list">
-                <button class="popular-btn" onclick="window.location.href='{% url 'popular_posts' %}'">전체</button>
+                <!-- 전체 버튼 -->
+                <button class="unit-btn" onclick="window.location.href='{% url 'popular_posts' %}'">전체</button>
                 
                 <!-- 사용자가 속한 부대 버튼 -->
                 {% if user.unit %}
@@ -239,7 +243,7 @@
                         <button class="unit-btn" onclick="window.location.href='{% url 'posts' user.unit.name %}'">{{ user.unit.name }}</button>
                     {% endif %}
                 {% endif %}
-
+                
                 <!-- 카테고리 버튼 추가 -->
                 {% for category in categories %}
                     {% if current_category == category %}
@@ -249,30 +253,33 @@
                     {% endif %}
                 {% endfor %}
                 
+                <!-- 다른 부대 버튼들 -->
                 {% for unit in units %}
-                    {% if unit.name == user.unit.name %}
-
+                    {% if current_unit == unit %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' unit.name %}'">{{ unit.name }}</button>
                     {% else %}
                         <button class="unit-btn" onclick="window.location.href='{% url 'posts' unit.name %}'">{{ unit.name }}</button>
                     {% endif %}
                 {% endfor %}
-                
             </div>
             <div class="action-buttons">
+                <!-- 부대 가입 버튼 (사용자가 로그인했고 소속된 부대가 없는 경우) -->
                 {% if user.is_authenticated and not user.unit %}
                     <button class="join-unit-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
                 {% endif %}
             </div>
         </div>
         
+        <!-- 게시물 리스트 -->
         <div class="post-list">
             {% for post in posts %}
             <div class="post-item">
                 <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
                 <p class="post-content">{{ post.content|truncatewords:20 }}</p>
                 <div class="post-meta">
+                    <!-- 게시물의 unit이 없으면 category를 표시 -->
                     <div class="unit-author">
-                        <span class="unit">{{ post.unit }}</span>
+                        <span class="unit">{% if post.unit %}{{ post.unit.name }}{% else %}{{ post.category.name }}{% endif %}</span>
                         <span class="post-author">{{ post.author|mask_author }}</span>
                     </div>
                     <div class="post-stats">
@@ -289,10 +296,11 @@
                             <span class="number">{{ post.views }}</span>
                         </div>
                     </div>
+
                 </div>
             </div>
             {% empty %}
-            <p>게시물이 없습니다.</p>
+            
             {% endfor %}
         </div>
     </main>

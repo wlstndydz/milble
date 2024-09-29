@@ -21,6 +21,12 @@ class UnitForm(forms.ModelForm):
             'answer3': forms.TextInput(attrs={'placeholder': '예) 12대'}),
         }
         
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if Unit.objects.filter(name=name).exists():
+            raise forms.ValidationError("동일한 이름의 부대가 이미 존재합니다.")
+        return name
+        
 class SignupRequestForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")  # 비밀번호 확인 필드 추가
 

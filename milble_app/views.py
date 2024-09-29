@@ -8,7 +8,7 @@ from .forms import LoginForm  # 여기서 LoginForm을 임포트
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
-from .models import Post, Comment # Category 모델 임포트 추가
+from .models import Category, Post, Comment # Category 모델 임포트 추가
 from django.shortcuts import get_object_or_404
 from .forms import CommentForm, ReplyForm
 from .models import CustomUser
@@ -24,6 +24,9 @@ from .models import Unit, Post
 def index(request):
     # 인기 게시물: 좋아요 또는 댓글 순으로 5개
     popular_posts = Post.objects.all().order_by('-views')[:5]
+    
+    #자유게시물 
+    category_posts = Post.objects.filter(category__name='자유').order_by('-views')[:5]
 
     # 사용자 로그인 확인 및 소속 부대의 게시물 가져오기
     user_unit_posts = None
@@ -42,7 +45,7 @@ def index(request):
 
         user_unit_posts = {
             'popular': popular_user_unit_posts,
-            'recent': recent_user_unit_posts
+            'recent': recent_user_unit_posts,
         }
 
     # 부대별 게시물 가져오기
@@ -54,7 +57,8 @@ def index(request):
     return render(request, 'index.html', {
         'popular_posts': popular_posts,
         'user_unit_posts': user_unit_posts,
-        'unit_posts': unit_posts  # 부대별 게시물 추가
+        'unit_posts': unit_posts,  # 부대별 게시물 추가
+        'category_posts':category_posts
     })
 
 
@@ -106,37 +110,75 @@ def profile_view(request):
     }
     return render(request, 'profile.html', context)
 
-#게시물 생성뷰
+#게시물생성뷰
 @login_required
-def post_create(request):
-    user = request.user  # 현재 로그인한 사용자
+def post_create_view(request):
+    user = request.user
     
-    if request.method == "POST":
+    if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            post = form.save(commit=False, user=user)  # user를 전달
-            post.save()  # 게시물 저장
-            return redirect('/')
+            post = form.save(commit=False)
+            classification = request.POST.get('classification')
+            
+            # 분류가 부대인지 카테고리인지 확인하여 설정
+            if classification.startswith('category_'):
+                category_id = classification.split('_')[1]
+                post.category = Category.objects.get(pk=category_id)
+                post.unit = None
+            else:
+                post.unit = user.unit if classification else None
+                post.category = None
+
+            post.author = user.username
+            post.save()
+            return redirect('index')  # 게시물 생성 후 메인 페이지로 리디렉션
     else:
         form = PostForm()
 
-    return render(request, 'post_form.html', {'form': form})
+    # 사용자의 부대 정보와 전체 카테고리를 템플릿에 전달
+    user_units = user.unit if user.is_authenticated else None
+    categories = Category.objects.all()
 
-def unit_posts_view(request, unit_name):
-    # unit_name에 해당하는 부대 정보를 가져옵니다.
-    unit = get_object_or_404(Unit, name=unit_name)
-    
-    # 해당 부대의 게시물들을 가져옵니다.
-    posts = Post.objects.filter(unit=unit).order_by('-created_at')  # 최신순으로 정렬
+    return render(request, 'post_form.html', {
+        'form': form,
+        'user_units': user_units,  # 사용자 부대
+        'categories': categories,  # 카테고리 목록
+    })
 
-    # 모든 부대 정보를 가져오되, 현재 부대(unit)를 제외합니다.
-    units = Unit.objects.exclude(name=request.user.unit)
+from django.shortcuts import get_object_or_404, render
+from .models import Unit, Category, Post
+
+def posts_view(request, posts_name):
+    # posts_name으로 부대 정보를 먼저 검색합니다.
+    unit = Unit.objects.filter(name=posts_name).first()
+    category = None
     
-    return render(request, 'unit_posts.html', {
-        'current_unit': unit,  # 현재 선택된 부대
+    # 만약 unit이 없다면, 카테고리에서 검색합니다.
+    if not unit:
+        category = Category.objects.filter(name=posts_name).first()
+    
+    # 특정 부대 또는 카테고리에 해당하는 게시물들을 가져옵니다.
+    posts = Post.objects.all()
+    if unit:
+        posts = posts.filter(unit=unit, category__isnull=True)  # unit이 있을 때만 필터링
+    elif category:
+        posts = posts.filter(category=category, unit__isnull=True)  # category가 있을 때만 필터링
+    posts = posts.order_by('-created_at')  # 최신순으로 정렬
+
+    # 모든 부대와 카테고리를 가져옵니다.
+    units = Unit.objects.exclude(name=request.user.unit) if request.user.is_authenticated else Unit.objects.all()
+    categories = Category.objects.exclude(name="전체")  # '전체' 카테고리는 제외하고 표시
+
+    # 렌더링 시 현재 선택된 부대 또는 카테고리를 함께 전달합니다.
+    return render(request, 'posts.html', {
+        'current_unit': unit,
+        'current_category': category,
         'posts': posts,
-        'units': units,  # 부대 리스트
-        'user': request.user  # 로그인 여부 및 유저 정보 확인
+        'units': units,
+        'categories': categories,
+        'user': request.user,
+        'post_name': posts_name  # posts_name 변수를 렌더링에 전달
     })
 
 
@@ -146,10 +188,13 @@ def popular_posts_view(request):
     
     # 모든 부대 목록 가져오기
     units = Unit.objects.all()
+    categories = Category.objects.exclude(name="전체")  # '전체' 카테고리는 제외하고 표시
 
     return render(request, 'popular_posts.html', {
+        'user': request.user,
         'posts': popular_posts,
-        'units': units,  # 부대 목록 전달
+        'units': units,  # 부대 목록 전달,
+        'categories': categories
     })
 
 
@@ -226,6 +271,9 @@ def post_like(request, post_id):
     return redirect('post_detail', post_id=post_id)
 
 def unit_create_view(request):
+    
+    units = Unit.objects.all()
+    
     if request.method == 'POST':
         form = UnitForm(request.POST)
         if form.is_valid():
@@ -240,7 +288,6 @@ def unit_create_view(request):
             # 성공 시 리디렉션 (메인 페이지로 이동)
             return redirect('/')
     else:
-        units = Unit.objects.all()
         form = UnitForm()
 
     return render(request, 'create_unit.html', {

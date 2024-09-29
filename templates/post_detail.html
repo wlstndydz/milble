@@ -304,7 +304,7 @@
         <h1 class="post-title">{{ post.title }}</h1>
 
         <div class="post-meta">
-            <span class="unit">{{ post.unit }}</span>
+            <span class="unit">{{ post.unit|default:"소속 없음" }}</span>
             <span>{{ author_masked }}</span>
         </div>
 

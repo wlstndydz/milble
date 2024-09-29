@@ -127,6 +127,8 @@
             padding: 10px;
             border: 1px solid #e0e0e0;
             text-align: left; /* 텍스트 왼쪽 정렬 */
+            border-radius: 2rem;
+            text-align: center;
         }        
         .unit-list li span {
             display: block; /* 텍스트 블록으로 표시 */
@@ -163,15 +165,19 @@
         <h1 class="main-title">부대 커뮤니티 추가</h1>
 
         <div class="form-container">
-            {% if form.errors %}
-                <div class="error">모든 필드를 올바르게 작성해 주세요.</div>
-            {% endif %}
-            
             <form id="unit-form" method="POST">
                 {% csrf_token %}
                 
                 <label for="id_name">전체 부대명</label>
                 {{ form.name }}
+                
+               {% if form.name.errors %}
+                    <div class="error">
+                        {% for error in form.name.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
                 <label for="id_answer1">생활관이 몇 생활관까지 있나요?</label>
                 {{ form.answer1 }}
@@ -181,6 +187,7 @@
 
                 <label for="id_answer3">싸지방 컴퓨터 대수는 몇 대인가요?</label>
                 {{ form.answer3 }}
+                
 
                 <button type="submit">부대 추가</button>
             </form>
@@ -191,6 +198,7 @@
                 부대의 범위는 생활관 룰이 미치는 범위까지입니다.<br>
                 익명을 위해서 최대 중대 혹은 대대까지만 부대명을 적어주세요.<br>
                 질문은 해당 커뮤니티를 다른 사용자가 가입할 때 사용됩니다.<br>
+                동일한 이름의 부대 커뮤니티가 있는 경우 생성되지 않습니다.<br>
                 <span style="color: red;">부대를 추가하면 자동으로 그 부대에 가입됩니다.</span>
             </div>
         </div>

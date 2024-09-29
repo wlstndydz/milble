@@ -155,8 +155,22 @@
             {% csrf_token %}
             <label for="id_title">제목</label>
             {{ form.title }}
+    
             <label for="id_content">내용</label>
             {{ form.content }}
+
+            <!-- 분류 선택: 자신의 부대와 카테고리를 선택할 수 있는 하나의 드롭다운 추가 -->
+            <label for="id_classification">카테고리</label>
+            <select name="classification" id="id_classification">
+                <option value="">카테고리 선택</option>
+                {% if user_units %}
+                    <option value="{{ user_units.id }}">{{ user_units.name }}</option>
+                {% endif %}
+                {% for category in categories %}
+                    <option value="category_{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+    
             <div class="button-wrapper">
                 <button type="submit">게시물 생성</button>
             </div>

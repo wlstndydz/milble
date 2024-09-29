@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from .models import CustomUser, SignupRequest
 from .models import Post, Comment, Reply
-from .models import Unit
+from .models import Unit, Category
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -38,6 +38,7 @@ class SignupRequestAdmin(admin.ModelAdmin):
     approve_requests.short_description = "Approve selected requests"
     
 
+admin.site.register(Category)
 admin.site.register(Unit)
 admin.site.register(Post)
 admin.site.register(Comment)

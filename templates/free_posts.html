@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milble - 부대 게시판</title>
+    <title>Milble - 자유 게시물</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -58,7 +58,6 @@
             font-weight: bold;
             margin: 2rem 0;
             text-align: center;
-            height: 32px; 
         }
         .post-list {
             background-color: white;
@@ -150,8 +149,22 @@
             font-size: 16px;
         }
         .unit-btn:hover {
-            background-color: #f0f0f0;
+            background-color: #2563eb;
             border-color: #ccc;
+             color: white;
+        }
+        .popular-btn{
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            background-color: #2563eb;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
         }
         /* 부대 추가 및 가입 버튼 */
         .action-buttons {
@@ -184,27 +197,14 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
-        .selected-unit-btn{
-            display: inline-block;
-            font-family: Arial, sans-serif;
-            color: white;
-            padding: 0.5rem 1rem;
-            margin-right: 0.5rem;
-            background-color: #2563eb;
-            border: 1px solid #d1d5db;
-            border-radius: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
+        .unit {
+            color: #2563eb;
+            font-weight: 500;
         }
         .unit-author {
             display: flex; /* unit과 author를 수평으로 정렬 */
             gap: 0.5rem; /* 두 요소 사이의 간격 */
             align-items: center; /* 수직 정렬을 가운데로 */
-        }
-        .unit {
-            color: #2563eb;
-            font-weight: 500;
         }
     </style>
 </head>
@@ -224,27 +224,15 @@
     </header>
 
     <main class="container">
-        <h1 class="unit-title">{{ current_unit.name }}</h1>
+        <h1 class="unit-title">전체</h1> <!-- '인기'로 변경 -->
         
         <!-- 부대 리스트와 버튼 영역 분리 -->
         <div class="units">
             <div class="units-list">
-                <button class="unit-btn" onclick="window.location.href='{% url 'popular_posts' %}'">전체</button>
-                
-                {% if current_unit == user.unit %}
-                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'unit_posts' user.unit.name %}'">{{ user.unit.name }}</button>
-                    {% else %}
-                        <button class="unit-btn" onclick="window.location.href='{% url 'unit_posts' user.unit.name %}'">{{ user.unit.name }}</button>
-                    {% endif %}
-                
+                <button class="popular-btn" onclick="window.location.href='{% url 'popular_posts' %}'">전체</button>
                 {% for unit in units %}
-                    {% if current_unit == unit %}
-                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'unit_posts' unit.name %}'">{{ unit.name }}</button>
-                    {% else %}
-                        <button class="unit-btn" onclick="window.location.href='{% url 'unit_posts' unit.name %}'">{{ unit.name }}</button>
-                    {% endif %}
+                    <button class="unit-btn" onclick="window.location.href='{% url 'unit_posts' unit.name %}'">{{ unit.name }}</button>
                 {% endfor %}
-                
             </div>
             <div class="action-buttons">
                 {% if user.is_authenticated and not user.unit %}
@@ -267,7 +255,7 @@
                         <div class="like-stat">
                             <span class="icon">❤️</span>
                             <span class="number">{{ post.likes }}</span>
-                            </div>
+                        </div>
                         <div class="comment-stat">
                             <span class="icon">💬</span>
                             <span class="number">{{ post.comments.count }}</span>
@@ -277,11 +265,10 @@
                             <span class="number">{{ post.views }}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
             {% empty %}
-            <p>해당 부대의 게시물이 없습니다.</p>
+            <p>게시물이 없습니다.</p>
             {% endfor %}
         </div>
     </main>

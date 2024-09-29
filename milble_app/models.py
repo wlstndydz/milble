@@ -13,6 +13,12 @@ class Unit(models.Model):
     def __str__(self):
         return self.name
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class CustomUser(AbstractUser):
     unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -32,7 +38,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=100)  # 글쓴이
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.SET_NULL)  # 부대 선택 필드
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)  # 카테고리 선택 필드
     likes = models.PositiveIntegerField(default=0)  # 좋아요 수, 기본값 0
     comments_count = models.PositiveIntegerField(default=0)  # 댓글 수, 기본값 0
     views = models.PositiveIntegerField(default=0)  # 조회수, 기본값 0
