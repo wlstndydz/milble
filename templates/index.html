@@ -18,12 +18,8 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        header {
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
         .main-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
             width: 100%;
             font-weight: bold;
             text-align: center;
@@ -31,6 +27,15 @@
             overflow: hidden;
             white-space: nowrap;
             letter-spacing: 0.15em;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         .login-btn {
             background-color: #2563eb;
@@ -85,7 +90,6 @@
             background-color: white;
             border-radius: 0.5rem;
             padding: 1rem;
-            margin-bottom: 2rem;
         }
         .post-units h2 {
             font-size: 1.2rem;
@@ -103,6 +107,7 @@
             justify-content: space-between;
             align-items: center;
             padding-bottom: 0.75rem;
+            font-size: 0.875rem;
         }
         .post-item:last-child {
             border-bottom: none;
@@ -112,6 +117,7 @@
             align-items: center;
             text-decoration: none;
             color: inherit;
+            font-size: 1rem;
         }
         .post-unit-tag {
             font-size: 0.75rem;
@@ -121,7 +127,7 @@
         }
         .post-stats {
             display: flex;
-            gap: 10px;
+            gap: 0.1rem;
             font-size: 0.875rem;
             color: #6b7280;
         }
@@ -129,32 +135,34 @@
         .post-stats .like-stat, .post-stats .comment-stat {
             display: flex;
             align-items: center;
-            gap: 5px; /* 아이콘과 숫자 사이의 간격 */
+            gap: 1px; /* 아이콘과 숫자 사이의 간격 */
         }
 
         .icon {
-            font-size: 1rem; /* 아이콘 크기 조정 */
+            font-size: 0.875rem; /* 아이콘 크기 조정 */
         }
 
         .number {
             display: inline-block;
-            min-width: 30px; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            min-width: 2rem; /* 숫자 열이 고정된 너비를 가지도록 설정 */
             text-align: left; /* 오른쪽 정렬 */
+            font-size
         }
         
         .unit-posts {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(2, minmax(350px, 1fr));
+            gap: 0.2rem;
             margin-top: 2rem;
         }
+
         .unit-post {
             background-color: white;
             border-radius: 0.5rem;
             padding: 1rem;
         }
         .unit-post h3 {
-            font-size: 1rem;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 1px solid #e5e7eb;
@@ -201,11 +209,53 @@
             justify-content: space-between;
             align-items: center;
         }
+        
+        /* 반응형 웹 CSS */
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+        
+        
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
+        <div class="header-container">
             <div class="header-content">
                 <a href="{% url 'index' %}" class="logo">
                     <span>Milble</span>
@@ -215,6 +265,8 @@
                         <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
                         {% if user.is_authenticated and user.unit %}
                             <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
                         {% endif %}
                     {% else %}
                         <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
@@ -287,14 +339,6 @@
                 {% for post in popular_posts %}
                 <li class="post-item">
                     <a href="{% url 'post_detail' post.id %}" class="post-title">
-                        <span class="post-unit-tag" style="background-color: #e0f2fe; color: #0369a1;">
-                            {% if post.unit %}
-                                {{ post.unit.name }}
-                            {% else %}
-                                {{ post.category.name }}
-                            {% endif %}
-                    </span>
-
                         <span>{{ post.title }}</span>
                     </a>
                     <div class="post-stats">
@@ -322,7 +366,6 @@
                 {% for post in category_posts %}
                 <li class="post-item">
                     <a href="{% url 'post_detail' post.id %}" class="post-title">
-                        <span class="post-unit-tag" style="background-color: #e0f2fe; color: #0369a1;">{{ post.category.name }}</span>
                         <span>{{ post.title }}</span>
                     </a>
                     <div class="post-stats">

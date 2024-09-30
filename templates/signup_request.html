@@ -19,12 +19,12 @@
         }
         .container {
             background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(0, 0, 0, 0.1);
             padding: 2rem;
-            width: 100%;
+            width: 70vw;
             max-width: 500px;
             text-align: center; /* 추가: 컨테이너 내부의 텍스트를 가운데 정렬 */
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(0, 0, 0, 0.1);
         }
         .logo {
             font-size: 2rem;
@@ -163,8 +163,27 @@
         a {
             text-decoration: none; /* 밑줄 제거 */
         }
+        html {
+            font-size: 18px; /* 기본 폰트 크기 */
+        }
 
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
 
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
     </style>
 </head>
 <body>

@@ -68,7 +68,7 @@
             background-color: #1d4ed8;
         }
         .main-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
             width: 100%;
             font-family: 'Noto Sans KR', sans-serif;
             font-weight: bold;
@@ -129,6 +129,45 @@
         .unit-list a:hover {
             text-decoration: underline;
         }
+        /* 반응형 웹 CSS */
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -143,6 +182,8 @@
                         <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
                         {% if user.is_authenticated and user.unit %}
                             <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
                         {% endif %}
                     {% else %}
                         <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milble - 전체 게시물</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    <style>
+    <style>    
         body {
             font-family: 'Noto Sans KR', Arial, sans-serif;
             margin: 0;
@@ -73,7 +73,7 @@
             border-bottom: none;
         }
         .post-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             text-decoration: none;
             color: #1f2937;
@@ -81,7 +81,7 @@
             display: block;
         }
         .post-content {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: #4b5563;
             margin-bottom: 1rem;
         }
@@ -94,16 +94,12 @@
         }
         .post-author {
             font-weight: bold;
+            font-size: 0.7rem;
         }
         .post-stats {
             display: flex;
-            gap: 1rem;
+            gap: 1px;
         }
-        .post-stats {
-            display: flex;
-            gap: 0px; /* 각 통계 항목 사이의 간격 */
-        }
-
         .post-stats div {
             display: flex;
             align-items: center; /* 아이콘과 숫자 수직 정렬 */
@@ -114,13 +110,14 @@
         }
 
         .number {
-            margin-left: 5px; /* 아이콘과 숫자 사이의 간격 */
             display: inline-block;
-            min-width: 30px; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            min-width: 2rem; /* 숫자 열이 고정된 너비를 가지도록 설정 */
             text-align: left; /* 오른쪽 정렬 */
+            font-size
         }
         /* units-list는 스크롤 가능하게 설정 */
         .units {
+            position: relative; /* units의 기준 위치를 설정 */
             display: flex;
             align-items: center;
             background-color: white;
@@ -135,6 +132,7 @@
             overflow-x: auto;
             white-space: nowrap;
             padding: 10px;
+            z-index: 1; /* units-list가 항상 위에 보이도록 z-index 설정 */
         }
         .unit-btn {
             display: inline-block;
@@ -146,7 +144,7 @@
             border-radius: 1rem;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 0.875rem;
         }
         .unit-btn:hover {
             background-color: #2563eb;
@@ -164,12 +162,15 @@
             border-radius: 1rem;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 0.875rem;
         }
         /* 부대 추가 및 가입 버튼 */
         .action-buttons {
-            display: flex;
-            gap: 0.5rem;
+            position: absolute; /* 부모 요소를 기준으로 위치 조정 */
+            right: 0px; /* 오른쪽에서 10px 떨어진 위치에 배치 */
+            z-index: 2; /* units-list보다 아래에 있도록 설정 */
+            transform: translateY(-20%); /* 버튼을 수직 가운데로 맞춤 */
+            background-color: white; /* padding 영역을 포함하여 배경 색상 지정 */
         }
         .add-unit-btn, .join-unit-btn {
             background-color: #2563eb;
@@ -180,7 +181,7 @@
             padding: 0.5rem 1rem 0.5rem 2rem;
             position: relative;
             flex-shrink: 0;
-            font-size: 16px;
+            font-size: 0.875rem;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -200,11 +201,37 @@
         .unit {
             color: #2563eb;
             font-weight: 500;
+            font-size: 0.7rem;
         }
         .unit-author {
             display: flex; /* unit과 author를 수평으로 정렬 */
             gap: 0.5rem; /* 두 요소 사이의 간격 */
             align-items: center; /* 수직 정렬을 가운데로 */
+        }
+        h2 {
+            font-size: 1.2rem;
+        }
+        /*반응형 CSS*/
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
         }
     </style>
 </head>
@@ -216,8 +243,16 @@
                     <span>Milble</span>
                 </a>
                 <div class="header-buttons">
-                    <button class="login-btn">내정보</button>
-                    <button class="login-btn">글쓰기</button>
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                        {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -258,11 +293,6 @@
                 {% endfor %}
                 
             </div>
-            <div class="action-buttons">
-                {% if user.is_authenticated and not user.unit %}
-                    <button class="join-unit-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
-                {% endif %}
-            </div>
         </div>
         
         <div class="post-list">
@@ -285,7 +315,7 @@
                             <span class="number">{{ post.comments.count }}</span>
                         </div>
                         <div class="views-stat">
-                            <span class="icon">👁️</span>
+                            <span class="icon">👀</span>
                             <span class="number">{{ post.views }}</span>
                         </div>
                     </div>
