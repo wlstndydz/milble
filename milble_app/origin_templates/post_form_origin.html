@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 새 게시물 생성</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+       .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+         
+        }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-bottom: 90px;
+        }
+        .breadcrumb {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .breadcrumb span {
+            color: #2563eb;
+        }
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.4;
+            text-align: center;
+        }
+        form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        input[type="text"], textarea, select {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+        button[type="submit"] {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: calc(100% - 24px);
+            max-width: 600px;
+            transition: background-color 0.2s;
+        }
+        button[type="submit"]:hover {
+            background-color: #1d4ed8;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        /*반응형 CSS*/
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <a href="{% url 'index' %}" class="logo">
+                    <span>Milble</span>
+                </a>
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                        {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="post-title">새 게시물 생성</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="id_title">제목</label>
+            {{ form.title }}
+    
+            <label for="id_content">내용</label>
+            {{ form.content }}
+
+            <!-- 분류 선택: 자신의 부대와 카테고리를 선택할 수 있는 하나의 드롭다운 추가 -->
+            <label for="id_classification">카테고리</label>
+            <select name="classification" id="id_classification">
+                <option value="">카테고리 선택</option>
+                {% if user_units %}
+                    <option value="{{ user_units.id }}">{{ user_units.name }}</option>
+                {% endif %}
+                {% for category in categories %}
+                    <option value="category_{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+    
+            <div class="button-wrapper">
+                <button type="submit">게시물 생성</button>
+            </div>
+        </form>
+        <a href="{% url 'index' %}" class="back-link">뒤로 가기</a>
+    </div>
+</body>
+</html>

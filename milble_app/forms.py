@@ -2,7 +2,7 @@
 from django import forms
 from .models import SignupRequest
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Post, Comment, Reply, Unit
+from .models import Post, Comment, Reply, Unit, CustomUser
 
 class UnitForm(forms.ModelForm):
     class Meta:
@@ -46,8 +46,8 @@ class SignupRequestForm(forms.ModelForm):
 
     def clean_id(self):
         id = self.cleaned_data.get('id')
-        if SignupRequest.objects.filter(id=id).exists():
-            raise forms.ValidationError("This ID is already taken.")
+        if CustomUser.objects.filter(username=id).exists():
+            raise forms.ValidationError("존재하는 ID가 있습니다.")
         return id
 
     def clean(self):

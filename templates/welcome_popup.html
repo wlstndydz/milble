@@ -1,0 +1,106 @@
+        <style>
+        .popup_body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            z-index: 9999;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+        .popup {
+            top: 50%;
+            left:50%;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 70vw;  
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translate(-50%, -50%);
+            text-align: center;
+            position: absolute;
+            display: none;
+        }
+        .popup h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+        .popup p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: #333;
+        }
+        .popup ul {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+        .popup ul li {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .popup button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        .popup button:hover {
+            background-color: #1d4ed8;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+    </style>
+<div class="popup-body">
+    <div class="popup" id="welcomePopup">
+        <h1>환영합니다!</h1>
+        <p>육군 현역 익명 게시판 - 첫 베타 서비스입니다.<br>
+            아래 이용 가이드를 확인해주세요.</p>
+        <ul>
+            <li>회원가입 및 부대 가입 전 보기만 가능</li>
+            <li>자유 - 보기 O, 글쓰기 O, 댓글 O, 대댓글 O</li>
+            <li>본부대 - 보기 O, 글쓰기 O, 댓글 O, 대댓글 O</li>
+            <li>타부대 - 보기 O, 글쓰기 X, 댓글 X, 대댓글 X</li>
+        </ul>
+        <button onclick="closePopup()">확인</button>
+        <button onclick="closeAndNeverShowPopup()">다시 보지 않기</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 로컬 스토리지에 'hidePopup' 키가 없을 때만 팝업을 보여줌
+            if (!localStorage.getItem('hidePopup')) {
+                document.getElementById('welcomePopup').style.display = 'block';
+            } else {
+                document.body.style.overflow = 'auto'; // 스크롤 가능하게
+            }
+        });
+
+        function closePopup() {
+            document.getElementById('welcomePopup').style.display = 'none';
+            document.body.style.overflow = 'auto'; // 스크롤 가능하게
+        }
+
+        function closeAndNeverShowPopup() {
+            localStorage.setItem('hidePopup', 'true'); // 'hidePopup'을 로컬 스토리지에 저장
+            closePopup();
+        }
+    </script>
+</div>
+

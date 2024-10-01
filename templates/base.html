@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'footer.css' %}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <div class="left-header">
+                    <a href="{% url 'index' %}" class="logo">
+                        <span>Milble</span>
+                    </a>
+                    <span class="beta">beta</span>
+                </div>
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                            {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main">
+        {% block main %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo">Milble</span>
+                <span class="beta">beta</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">이용약관</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">문의하기</a>
+            </div>
+        </div>
+        <div class="footer-info">
+            <p>&copy; 2024 Milble. All rights reserved.</p>
+            <p>군인들을 위한 익명 SNS</p>
+        </div>
+    </footer>
+</body>
+</html>

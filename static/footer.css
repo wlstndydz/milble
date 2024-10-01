@@ -1,0 +1,56 @@
+.footer {
+    background-color: #f3f4f6;
+    padding: 2rem 2rem;
+    margin-top: 2rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.footer-logo .beta {
+    font-size: 0.75rem;
+    color: #6b7280;
+    vertical-align: super;
+    margin-left: 0.25rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-links a {
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.footer-info {
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-align: left;
+}
+
+.footer-info p {
+    margin: 0.25rem 0;
+}

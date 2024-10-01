@@ -1,0 +1,304 @@
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-bottom: 1rem;
+        }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 728px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            min-height: calc(100vh - 200px); /* 예시: 헤더와 푸터 높이 합 */
+        }
+        .breadcrumb {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .breadcrumb span {
+            color: #2563eb;
+        }
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .post-meta {
+            display: flex;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 30px;
+        }
+        .post-meta > * {
+            margin-right: 8px;
+        }
+        .post-meta .unit {
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .unit {
+            color: #2563eb;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .post-content {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .comments-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+            max-width: 100%;
+        }
+        .comments-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .comment {
+            background-color: #ffffff;
+            padding: 8px;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .comment-meta {
+            display: flex;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .comment-meta > * {
+            margin-right: 8px;
+        }
+        .comment-content {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .comment-form {
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 0px;
+            max-width: 100%;
+        }
+        .comment-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .comment-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: none;
+            font-size: 14px;
+            outline: none;
+        }
+        .comment-submit-btn {
+            background-color: transparent;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #2563eb;
+            transition: color 0.2s;
+        }
+        .comment-submit-btn:hover {
+            color: #1d4ed8;
+        }
+        .reply-input {
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
+        }
+        .reply-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            display: inline-block;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            cursor: pointer;
+            background-color: transparent;
+            color: #2563eb;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            border: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+        .reply-btn:hover {
+            color: #1d4ed8;
+        }
+        .reply-form-inner {
+            display: flex;
+            flex-direction: column;
+        }
+        .reply-form{
+            margin-bottom: 10px;
+        }
+        .reply-submit-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+        }
+        .reply-submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .reply {
+            background: #F7F7F7;
+            padding: 8px;
+            padding-left: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .comment-container {
+            border-bottom: 1px solid #e5e7eb;
+        
+        }
+        .comment-list {
+            padding-left: 0;
+            list-style-type: none;
+            margin-bottom: 0px;
+        }
+        .post-stats {
+            display: flex;
+            gap: 1px;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        .like-stat, .comment-stat, .views-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 아이콘과 숫자 간격 */
+        }
+        .icon {
+            font-size: 1rem;
+        }
+        .number {
+            display: inline-block;
+            width: 2rem;
+            text-align: left; /* 오른쪽 정렬 */
+        }
+        .like-button {
+            display: flex;
+            align-items: center;
+            gap: 3px; /* 아이콘과 숫자 간의 간격 */
+            background-color: transparent; /* 배경 투명 */
+            border: none; /* 기본 버튼 스타일 제거 */
+            cursor: pointer;
+            font-size: 1rem; /* 버튼의 크기와 텍스트 크기를 동일하게 맞춤 */
+            color: inherit; /* 텍스트 색상 상속 */
+            padding: 0;  /* 불필요한 패딩 제거 */
+            transform: translateY(0.2rem); /* Y축 아래로 5px 이동 */
+            font-size: 0.875rem;
+        }
+
+        .like-button .icon {
+            font-size: 0.9rem; /* 아이콘 크기 */
+        }
+
+        .like-button .number {
+            display: inline-block;
+            text-align: left;
+            align-items: center; /* 수직 가운데 정렬 */
+        }
+        /* 폼과 버튼을 동일한 크기로 설정 */
+        .like-form {
+            display: inline-block;  /* 버튼과 함께 동일한 크기를 유지 */
+            margin: 0;  /* 불필요한 여백 제거 */
+            padding: 0;  /* 불필요한 패딩 제거 */
+            text-align: center;
+            width: 4rem;
+        }
+        .author{
+            font-size: 1rem;
+        }
+       /*반응형 CSS*/
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+{% load mask_filters %}
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 게시물 상세</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-bottom: 1rem;
+        }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 728px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .breadcrumb {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .breadcrumb span {
+            color: #2563eb;
+        }
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .post-meta {
+            display: flex;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 30px;
+        }
+        .post-meta > * {
+            margin-right: 8px;
+        }
+        .post-meta .unit {
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .unit {
+            color: #2563eb;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .post-content {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .comments-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+            max-width: 100%;
+        }
+        .comments-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .comment {
+            background-color: #ffffff;
+            padding: 8px;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .comment-meta {
+            display: flex;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .comment-meta > * {
+            margin-right: 8px;
+        }
+        .comment-content {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .comment-form {
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 0px;
+            max-width: 100%;
+        }
+        .comment-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .comment-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: none;
+            font-size: 14px;
+            outline: none;
+        }
+        .comment-submit-btn {
+            background-color: transparent;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #2563eb;
+            transition: color 0.2s;
+        }
+        .comment-submit-btn:hover {
+            color: #1d4ed8;
+        }
+        .reply-input {
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
+        }
+        .reply-btn {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            display: inline-block;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            cursor: pointer;
+            background-color: transparent;
+            color: #2563eb;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            border: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+        .reply-btn:hover {
+            color: #1d4ed8;
+        }
+        .reply-form-inner {
+            display: flex;
+            flex-direction: column;
+        }
+        .reply-form{
+            margin-bottom: 10px;
+        }
+        .reply-submit-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+        }
+        .reply-submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .reply {
+            background: #F7F7F7;
+            padding: 8px;
+            padding-left: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .comment-container {
+            border-bottom: 1px solid #e5e7eb;
+        
+        }
+        .comment-list {
+            padding-left: 0;
+            list-style-type: none;
+            margin-bottom: 0px;
+        }
+        .post-stats {
+            display: flex;
+            gap: 1px;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        .like-stat, .comment-stat, .views-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 아이콘과 숫자 간격 */
+        }
+        .icon {
+            font-size: 1rem;
+        }
+        .number {
+            display: inline-block;
+            min-width: 2rem; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            text-align: left; /* 오른쪽 정렬 */
+            font-size
+        }
+        .like-button {
+            display: flex;
+            align-items: center;
+            gap: 3px; /* 아이콘과 숫자 간의 간격 */
+            background-color: transparent; /* 배경 투명 */
+            border: none; /* 기본 버튼 스타일 제거 */
+            cursor: pointer;
+            font-size: 1rem; /* 버튼의 크기와 텍스트 크기를 동일하게 맞춤 */
+            color: inherit; /* 텍스트 색상 상속 */
+            padding: 0;  /* 불필요한 패딩 제거 */
+            transform: translateY(0.2rem); /* Y축 아래로 5px 이동 */
+            font-size: 0.875rem;
+        }
+
+        .like-button .icon {
+            font-size: 0.9rem; /* 아이콘 크기 */
+        }
+
+        .like-button .number {
+            display: inline-block;
+            min-width: 40px; /* 숫자의 고정된 너비 */
+            text-align: left;
+            align-items: center; /* 수직 가운데 정렬 */
+        }
+        /* 폼과 버튼을 동일한 크기로 설정 */
+        .like-form {
+            display: inline-block;  /* 버튼과 함께 동일한 크기를 유지 */
+            margin: 0;  /* 불필요한 여백 제거 */
+            padding: 0;  /* 불필요한 패딩 제거 */
+            text-align: center;
+            width: 15%
+        }
+        .author{
+            font-size: 1rem;
+        }
+       /*반응형 CSS*/
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <a href="{% url 'index' %}" class="logo">
+                    <span>Milble</span>
+                </a>
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                        {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1 class="post-title">{{ post.title }}</h1>
+
+        <div class="post-meta">
+            <span class="unit">{{ post.unit|default:"소속 없음" }}</span>
+            <span>{{ author_masked }}</span>
+        </div>
+
+        <div class="post-content">
+            {{ post.content }}
+        </div>
+        <!-- 좋아요, 댓글 수, 조회수 영역 추가 -->
+        <div class="post-stats">
+        <!-- 좋아요 버튼 -->
+        <form method="POST" action="{% url 'post_like' post.id %}" class="like-form">
+            {% csrf_token %}
+            <button type="submit" class="like-button">
+                <span class="icon">
+                    {% if user in post.liked_users.all %}
+                        ❤️
+                    {% else %}
+                        🤍
+                    {% endif %}
+                </span>
+                <span class="number">{{ post.likes }}</span>
+            </button>
+        </form>
+            <div class="comment-stat">
+                <span class="icon">💬</span>
+                <span class="number">{{ post.comments_count }}</span>
+            </div>
+            <div class="views-stat">
+                <span class="icon">👁️</span>
+                <span class="number">{{ post.views }}</span>
+            </div>
+        </div>
+        <div class="comments-section">
+            <h2 class="comments-title">댓글</h2>
+            <ul class="comment-list">
+                {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-container">
+                        <div class="comment-meta">
+                            <span class="unit">{{ comment.unit }}</span>
+                            <span class="author">{{ comment.author|mask_author }}</span>
+                        </div>
+                        <div class="comment-content">
+                            {{ comment.content }}
+                        </div>
+                        {% if user.is_authenticated and post.unit == user.unit and user.unit != none or user.is_authenticated and post.category != none and user.unit != none %}
+                        <button class="reply-btn" onclick="toggleReplyForm({{ comment.id }})">
+                            <i class="fas fa-comment-alt"></i>
+                        </button>
+                        <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
+                            <form method="post" class="reply-form-inner">
+                                {% csrf_token %}
+                                <div class="comment-input-wrapper">
+                                    <input type="text" name="content" placeholder="대댓글을 입력하세요" class="comment-input">
+                                    <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                    <button type="submit" name="reply-submit" class="comment-submit-btn">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% for reply in comment.replies.all %}
+                    <div class="reply">
+                        <div class="comment-meta">
+                            <span class="unit">{{ reply.unit }}</span>
+                            <span class="author">{{ reply.author|mask_author }}</span>
+                        </div>
+                        <div class="comment-content">
+                            {{ reply.content }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </ul>
+            {% if user.is_authenticated and post.unit == user.unit and user.unit != none or user.is_authenticated and post.category != none and user.unit != none %}
+            <form method="post" class="comment-form">
+                {% csrf_token %}
+                <div class="comment-input-wrapper">
+                    <input type="text" name="content" placeholder="댓글을 입력하세요" class="comment-input">
+                    <button type="submit" name="comment-submit" class="comment-submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+            {% endif %}
+            {% if not user.is_authenticated%}
+            <p>댓글을 작성하려면 <a href="{% url 'login' %}">로그인</a> 해주세요.</p>
+            {% elif user.unit == none and post.category %}
+            <p>댓글을 작성하려면 <a href="{% url 'join_unit' %}">부대가입</a> 해주세요.</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function toggleReplyForm(commentId) {
+            var replyForm = document.getElementById('reply-form-' + commentId);
+            if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+                replyForm.style.display = 'block';
+            } else {
+                replyForm.style.display = 'none';
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const commentForms = document.querySelectorAll(".comment-form, .reply-form-inner");
+            commentForms.forEach(form => {
+                const input = form.querySelector("input[name='content']");
+                form.addEventListener("submit", function(event) {
+                    if (input.value.trim() === "") {
+                        event.preventDefault();
+                        alert("댓글 내용을 입력해주세요.");
+                        input.focus();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

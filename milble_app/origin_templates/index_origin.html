@@ -1,0 +1,398 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 군인들의 익명 SNS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'footer.css' %}">
+    <style>
+        html, body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            min-height: calc(100vh - 200px); /* 예시: 헤더와 푸터 높이 합 */
+        }
+        .main-title {
+            font-size: 1.5rem;
+            width: 100%;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: 0.15em;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            font-size: 1rem;
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .post-units {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .post-units h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .post-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+        .post-item:last-child {
+            border-bottom: none;
+        }
+        .post-title {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            font-size: 1rem;
+        }
+        .post-unit-tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+        }
+        .post-stats {
+            display: flex;
+            gap: 0.1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        /* 좋아요 및 댓글 아이콘과 숫자 정렬을 위한 추가 */
+        .post-stats .like-stat, .post-stats .comment-stat {
+            display: flex;
+            align-items: center;
+            gap: 1px; /* 아이콘과 숫자 사이의 간격 */
+        }
+
+        .icon {
+            font-size: 0.875rem; /* 아이콘 크기 조정 */
+        }
+
+        .number {
+            display: inline-block;
+            min-width: 2rem; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            text-align: left; /* 오른쪽 정렬 */
+            font-size
+        }
+        
+        .unit-posts {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(350px, 1fr));
+            gap: 0.2rem;
+            margin-top: 2rem;
+        }
+
+        .unit-post {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .unit-post h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .unit-post-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .unit-post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+        .unit-post-title {
+            text-decoration: none;
+            color: inherit;
+        }
+        .unit-post-views {
+            display: inline-block;
+            min-width: 30px; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            text-align: left; /* 오른쪽 정렬 */
+            color: #6b7280;
+        }
+        .views-container {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* 아이콘과 숫자 간격 */
+        }
+        .more-link {
+            font-size: 0.875rem;
+            color: #2563eb;
+            text-decoration: none;
+            margin-left: auto; /* 오른쪽 끝으로 밀기 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        .more-link:hover {
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        h2, h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* 반응형 웹 CSS */
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <div class="left-header">
+                    <a href="{% url 'index' %}" class="logo">
+                        <span>Milble</span>
+                    </a>
+                    <span class="beta">beta</span>
+                </div>
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                            {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <main class="container">
+        <h1 class="main-title">현역 부대 익명 커뮤니티 - MILBLE</h1>
+        <div class="search-container">
+            <input type="search" class="search-input" placeholder="관심있는 주제를 검색해보세요">
+            <span class="search-icon">🔍</span>
+        </div>
+        
+        <!-- 우리부대 게시물 섹션 -->
+        {% if user.is_authenticated and user.unit %}
+        <div class="post-units">
+            <h2>
+                우리부대
+                <a href="{% url 'posts' user.unit.name %}" class="more-link">더보기 ></a>
+            </h2>
+            <ul class="post-list">
+                {% for post in user_unit_posts.popular %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span>🔥&nbsp;{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+                {% for post in user_unit_posts.recent %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span>{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+
+        <div class="post-units">
+            <h2>
+                전체
+                  <a href="{% url 'popular_posts' %}" class="more-link">더보기 ></a> <!-- 더보기 URL 수정 -->
+            </h2>
+            <ul class="post-list">
+                {% for post in popular_posts %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span>{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        
+        <div class="post-units">
+            <h2>
+                자유
+                  <a href="{% url 'popular_posts' %}" class="more-link">더보기 ></a> <!-- 더보기 URL 수정 -->
+            </h2>
+            <ul class="post-list">
+                {% for post in category_posts %}
+                <li class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">
+                        <span>{{ post.title }}</span>
+                    </a>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments_count }}</span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="unit-posts">
+            {% for unit, posts in unit_posts.items %}
+            <div class="unit-post">
+                <h3>
+                    {{ unit.name }}
+                     <a href="{% url 'posts' unit.name %}" class="more-link">더보기 ></a> <!-- 더보기 추가 -->
+                </h3>
+                <ul class="unit-post-list">
+                    {% for post in posts %}
+                    <li class="unit-post-item">
+                        <a href="{% url 'post_detail' post.id %}" class="unit-post-title">{{ post.title }}</a>
+                            <div class="views-container">
+                            <span class="icon">👀</span>
+                            <span class="unit-post-views">{{ post.views }}</span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo">Milble</span>
+                <span class="beta">beta</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">이용약관</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">문의하기</a>
+            </div>
+        </div>
+        <div class="footer-info">
+            <p>&copy; 2024 Milble. All rights reserved.</p>
+            <p>군인들을 위한 익명 SNS</p>
+        </div>
+    </footer>
+</body>
+</html>

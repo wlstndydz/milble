@@ -1,196 +1,15 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milble - 회원가입</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: white;
-            padding: 2rem;
-            width: 70vw;
-            max-width: 500px;
-            text-align: center; /* 추가: 컨테이너 내부의 텍스트를 가운데 정렬 */
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2563eb;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            margin-bottom: 2rem;
-            text-decoration: none; /* 밑줄 제거 */
-        }
-        h1 {
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;  /* 폼을 가운데 정렬 */
-        }
-        label {
-            align-self: flex-start;  /* 라벨을 왼쪽 정렬 */
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        input, select, textarea {
-            width: 80%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.25rem;
-            font-size: 1rem;
-        }
-        button {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #EDEFF5;
-        }
-        .form-error {
-            align-self: flex-start;  /* 에러 메시지를 왼쪽 정렬 */
-            color: #dc2626;
-            font-size: 0.875rem;
-            margin-top: -0.5rem;
-            margin-bottom: 1rem;
-        }
-        .disclaimer {
-            font-size: 0.875rem;  /* 회원가입보다 작은 글씨 크기 */
-            color: #dc2626;  /* 빨간색으로 설정 */
-            text-align: center;  /* 가운데 정렬 */
-            margin-top: 1rem;  /* 위쪽 여백 추가 */
-        }
-        /* 아이콘 스타일 */
-        /* 버튼 스타일 */
-        .info-icon {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: #2563eb;
-            cursor: pointer;
-            margin-left: 0.5rem;
-            padding: 0;
-            line-height: 1;
-        }
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %}Milble - 회원가입{% endblock %}
 
-        /* 팝업창 스타일 */
-        .popup {
-            display: none; /* 기본적으로 숨김 */
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'signup_request.css' %}">
+{% endblock %}
 
-        .popup-content {
-            background-color: white;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            width: 80%;
-            max-width: 800px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* 이미지와 텍스트를 가운데 정렬 */
-            justify-content: center;
-            text-align: center; /* 텍스트 가운데 정렬 */
-        }
-
-        .popup img {
-            max-width: 80%; /* 이미지의 가로 크기를 부모 요소에 맞추어 조정 */
-            height: auto;
-            margin-bottom: 1rem; /* 이미지 아래에 여백 추가 */
-        }
-
-        .close {
-            position: absolute;
-            top: 0.5rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        input[type="file"] {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            
-        }
-        input[type=file]::file-selector-button {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-             width: 100px;
-          height: 30px;
-          background: #fff;
-          border: 1px solid rgb(77,77,77);
-          border-radius: 10px;
-          cursor: pointer;
-          &:hover {
-            background: rgb(77,77,77);
-            color: #fff;
-            }
-        }
-        a {
-            text-decoration: none; /* 밑줄 제거 */
-        }
-        html {
-            font-size: 18px; /* 기본 폰트 크기 */
-        }
-
-        @media (max-width: 1200px) {
-            html {
-                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
-            }
-        }
-
-        @media (max-width: 768px) {
-            html {
-                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
-            }
-        }
-
-        @media (max-width: 480px) {
-            html {
-                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
-            }
-        }
-    </style>
-</head>
-<body>
+{% block main %}
+<div class="main-content">
     <div class="container">
-        <a href="{% url 'index' %}" class="logo">
-            Milble
-        </a>
         <h1>회원가입</h1>
         <p class="disclaimer">회원가입 신청 후 24시간 이내에 완료됩니다.</p>
         <form method="post" enctype="multipart/form-data">
@@ -210,7 +29,7 @@
             <button type="submit">가입 신청</button>
         </form>
     </div>
-    
+</div>
     <!-- Verification Popup (현역병 인증 사진 팝업) -->
     <div id="verification-popup" class="popup">
         <div class="popup-content">
@@ -251,5 +70,4 @@
                 window.closeVerificationPopup = closeVerificationPopup;
             });
         </script>
-</body>
-</html>
+{% endblock %}

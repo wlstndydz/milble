@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+{% load mask_filters %}
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 게시판</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-bottom: 90px;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        .unit-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .post-list {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .post-item {
+            padding: 1.5rem 0rem 1.5rem 1.5rem; /* 순서대로 위, 오른쪽, 아래, 왼쪽 패딩 */
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+        .post-title {
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .post-content {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        .post-author {
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+        .post-stats {
+            display: flex;
+            gap: 1px;
+        }
+
+        .post-stats div {
+            display: flex;
+            align-items: center; /* 아이콘과 숫자 수직 정렬 */
+        }
+
+        .icon {
+            font-size: 1rem; /* 아이콘 크기 */
+        }
+
+        .number {
+            display: inline-block;
+            min-width: 2rem; /* 숫자 열이 고정된 너비를 가지도록 설정 */
+            text-align: left; /* 오른쪽 정렬 */
+            font-size
+        }
+        /* units-list는 스크롤 가능하게 설정 */
+        .units {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            justify-content: space-between;
+        }
+        .units-list {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+        }
+        .unit-btn {
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        .unit-btn:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+        /* 부대 추가 및 가입 버튼 */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .add-unit-btn, .join-unit-btn {
+            background-color: #2563eb;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem 0.5rem 2rem;
+            position: relative;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .add-unit-btn:hover, .join-unit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .add-unit-btn::before, .join-unit-btn::before {
+            content: '+';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-35%);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .selected-unit-btn{
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            background-color: #2563eb;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        .unit-author {
+            display: flex; /* unit과 author를 수평으로 정렬 */
+            gap: 0.5rem; /* 두 요소 사이의 간격 */
+            align-items: center; /* 수직 정렬을 가운데로 */
+        }
+        .unit {
+            color: #2563eb;
+            font-weight: 500;
+            font-size: 0.7rem;
+        }
+        /* 반응형 웹 CSS */
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="{% url 'index' %}" class="logo">
+                    <span>Milble</span>
+                </a>
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                        {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 현재 부대 또는 카테고리 이름을 표시 -->
+        <h1 class="unit-title">
+            {% if current_unit %}{{ current_unit.name }}{% elif current_category %}{{ current_category.name }}{% else %}전체 게시판{% endif %}
+        </h1>
+        
+        <!-- 부대 및 카테고리 리스트와 버튼 영역 분리 -->
+        <div class="units">
+            <div class="units-list">
+                <!-- 전체 버튼 -->
+                <button class="unit-btn" onclick="window.location.href='{% url 'popular_posts' %}'">전체</button>
+                
+                <!-- 사용자가 속한 부대 버튼 -->
+                {% if user.unit %}
+                    {% if current_unit == user.unit %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' user.unit.name %}'">{{ user.unit.name }}</button>
+                    {% else %}
+                        <button class="unit-btn" onclick="window.location.href='{% url 'posts' user.unit.name %}'">{{ user.unit.name }}</button>
+                    {% endif %}
+                {% endif %}
+                
+                <!-- 카테고리 버튼 추가 -->
+                {% for category in categories %}
+                    {% if current_category == category %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' category.name %}'">{{ category.name }}</button>
+                    {% else %}
+                        <button class="unit-btn" onclick="window.location.href='{% url 'posts' category.name %}'">{{ category.name }}</button>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- 다른 부대 버튼들 -->
+                {% for unit in units %}
+                    {% if current_unit == unit %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' unit.name %}'">{{ unit.name }}</button>
+                    {% else %}
+                        <button class="unit-btn" onclick="window.location.href='{% url 'posts' unit.name %}'">{{ unit.name }}</button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 게시물 리스트 -->
+        <div class="post-list">
+            {% for post in posts %}
+            <div class="post-item">
+                <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                <p class="post-content">{{ post.content|truncatewords:20 }}</p>
+                <div class="post-meta">
+                    <!-- 게시물의 unit이 없으면 category를 표시 -->
+                    <div class="unit-author">
+                        <span class="unit">{% if post.unit %}{{ post.unit.name }}{% else %}{{ post.category.name }}{% endif %}</span>
+                        <span class="post-author">{{ post.author|mask_author }}</span>
+                    </div>
+                    <div class="post-stats">
+                        <div class="like-stat">
+                            <span class="icon">❤️</span>
+                            <span class="number">{{ post.likes }}</span>
+                        </div>
+                        <div class="comment-stat">
+                            <span class="icon">💬</span>
+                            <span class="number">{{ post.comments.count }}</span>
+                        </div>
+                        <div class="views-stat">
+                            <span class="icon">👀</span>
+                            <span class="number">{{ post.views }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+            
+            {% endfor %}
+        </div>
+    </main>
+
+</body>
+</html>

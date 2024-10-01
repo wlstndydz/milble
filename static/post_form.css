@@ -1,0 +1,173 @@
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+       .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+         
+        }
+        .login-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column; /* 수직 정렬을 위해 추가 */
+        }
+
+        .form-container {
+            width: 100%;
+        }
+
+        .back-link {
+            text-align: center;
+            display: block;
+            margin-top: 16px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .breadcrumb span {
+            color: #2563eb;
+        }
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.4;
+            text-align: center;
+        }
+        form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            width: 70vw;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        input[type="text"], textarea, select {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        select{
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+        textarea {
+            height: 10vh;
+            resize: vertical;
+        }
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+        button[type="submit"] {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: calc(100% - 24px);
+            max-width: 600px;
+            transition: background-color 0.2s;
+        }
+        button[type="submit"]:hover {
+            background-color: #1d4ed8;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        /*반응형 CSS*/
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }

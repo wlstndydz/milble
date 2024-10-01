@@ -16,32 +16,34 @@ from django.http import HttpResponseForbidden
 from .models import Unit
 from .forms import UnitForm
 from .forms import UnitSearchForm, UnitJoinForm
+from django.utils import timezone
+from datetime import timedelta
 
 
 from django.shortcuts import render
 from .models import Unit, Post
 
 def index(request):
-    # 인기 게시물: 좋아요 또는 댓글 순으로 5개
-    popular_posts = Post.objects.all().order_by('-views')[:5]
+    # 예: 최근 7일 이내의 게시물 중에서 좋아요 순으로 5개 가져오기
+    recent_time_period = timezone.now() - timedelta(days=7)
+    popular_posts = Post.objects.filter(created_at__gte=recent_time_period).order_by('-likes')[:5]
     
     #자유게시물 
-    category_posts = Post.objects.filter(category__name='자유').order_by('-views')[:5]
+    category_posts = Post.objects.filter(category__name='자유', created_at__gte=recent_time_period).order_by('-likes')[:5]
 
     # 사용자 로그인 확인 및 소속 부대의 게시물 가져오기
     user_unit_posts = None
     if request.user.is_authenticated and request.user.unit:
         user_unit = request.user.unit
-        print(Post.objects.filter(unit=user_unit))
         # 우리부대 게시물: 좋아요 순으로 2개, 최신순으로 3개
         # 인기 게시물 2개
-        popular_user_unit_posts = Post.objects.filter(unit=user_unit).order_by('-views')[:2]
+        popular_user_unit_posts = Post.objects.filter(unit=user_unit, category__isnull=True).order_by('-comments_count')[:2]
         print(popular_user_unit_posts)
 
 
 
         # 최근 게시물에서 인기 게시물 제외
-        recent_user_unit_posts = Post.objects.filter(unit=user_unit).exclude(id__in=popular_user_unit_posts.values_list('id', flat=True)).order_by('-created_at')[:3]
+        recent_user_unit_posts = Post.objects.filter(unit=user_unit, category__isnull=True).exclude(id__in=popular_user_unit_posts.values_list('id', flat=True)).order_by('-created_at')[:3]
 
         user_unit_posts = {
             'popular': popular_user_unit_posts,
@@ -125,7 +127,7 @@ def post_create_view(request):
             if classification.startswith('category_'):
                 category_id = classification.split('_')[1]
                 post.category = Category.objects.get(pk=category_id)
-                post.unit = None
+                post.unit = user.unit
             else:
                 post.unit = user.unit if classification else None
                 post.category = None
@@ -150,6 +152,7 @@ from django.shortcuts import get_object_or_404, render
 from .models import Unit, Category, Post
 
 def posts_view(request, posts_name):
+    
     # posts_name으로 부대 정보를 먼저 검색합니다.
     unit = Unit.objects.filter(name=posts_name).first()
     category = None
@@ -160,10 +163,10 @@ def posts_view(request, posts_name):
     
     # 특정 부대 또는 카테고리에 해당하는 게시물들을 가져옵니다.
     posts = Post.objects.all()
-    if unit:
+    if category:
+        posts = posts.filter(category=category)  # category가 있을 때만 필터링
+    elif unit:
         posts = posts.filter(unit=unit, category__isnull=True)  # unit이 있을 때만 필터링
-    elif category:
-        posts = posts.filter(category=category, unit__isnull=True)  # category가 있을 때만 필터링
     posts = posts.order_by('-created_at')  # 최신순으로 정렬
 
     # 모든 부대와 카테고리를 가져옵니다.
@@ -278,12 +281,17 @@ def unit_create_view(request):
         form = UnitForm(request.POST)
         if form.is_valid():
             # 부대 저장
+            
             unit = form.save()
             
             # 생성한 부대에 자동으로 사용자 가입
             user = request.user
             user.unit = unit
             user.save()
+            
+            # 가입자 수 증가
+            unit.subscriber_count += 1
+            unit.save()
 
             # 성공 시 리디렉션 (메인 페이지로 이동)
             return redirect('/')
@@ -303,7 +311,7 @@ def join_unit_view(request):
 
     if search_form.is_valid():
         query = search_form.cleaned_data['query']
-        units = Unit.objects.filter(name__icontains=query)  # 부대명 검색
+        units = Unit.objects.filter(name__icontains=query).order_by('-subscriber_count')  # 부대명 검색 및 가입자 수 내림차순 정렬
 
         # 부대 선택 후 질문 표시
         if 'unit_id' in request.GET:
@@ -319,6 +327,10 @@ def join_unit_view(request):
                     # 가입 처리 (유저와 부대 연결)
                     request.user.unit = unit
                     request.user.save()
+                    
+                    # 가입자 수 증가
+                    unit.subscriber_count += 1
+                    unit.save()
                     return render(request, 'index')
                 else:
                     join_form.add_error(None, '답변이 일치하지 않습니다.')

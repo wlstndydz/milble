@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milble - 부대 커뮤니티 추가</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'header.css' %}">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-bottom: 90px;
+        }
+        .main-title {
+            font-size: 2rem;
+            width: 100%;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: 0.15em;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+        }
+        .error {
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+        button[type="submit"] {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        button[type="submit"]:hover {
+            background-color: #1d4ed8;
+        }
+        .unit-list {
+            margin-top: 2rem;
+            margin-bottom: 90px;
+        }
+        .unit-list h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .unit-list ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 최소 너비 150px을 기준으로 열을 자동 생성 */
+            padding: 0;
+            margin: 0; /* 기본 margin 제거 */
+            list-style: none; /* 불릿 제거 */
+        }
+
+        .unit-list li {
+            display: block; /* 각 항목을 블록으로 표시 */
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: left; /* 텍스트 왼쪽 정렬 */
+            border-radius: 2rem;
+            text-align: center;
+        }        
+        .unit-list li span {
+            display: block; /* 텍스트 블록으로 표시 */
+            word-wrap: break-word; /* 긴 텍스트가 넘어가지 않도록 줄바꿈 처리 */
+        }
+        .note {
+            font-size: 0.875rem; /* 작은 글씨 */
+            color: #6b7280; /* 회색 글씨 */
+            margin-top: 1.5rem;
+            line-height: 1.5;
+        }
+        /* 반응형 웹 CSS */
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+            .unit-posts {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 0.2rem;
+                margin-top: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <div class="left-header">
+                    <a href="{% url 'index' %}" class="logo">
+                        <span>Milble</span>
+                    </a>
+                    <span class="beta">beta</span>
+                </div>
+                <div class="header-buttons">
+                    {% if user.is_authenticated %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
+                            {% if user.is_authenticated and user.unit %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
+                        {% else %}
+                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">부대 커뮤니티 추가</h1>
+
+        <div class="form-container">
+            <form id="unit-form" method="POST">
+                {% csrf_token %}
+                
+                <label for="id_name">전체 부대명</label>
+                {{ form.name }}
+                
+               {% if form.name.errors %}
+                    <div class="error">
+                        {% for error in form.name.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <label for="id_answer1">생활관이 몇 생활관까지 있나요?</label>
+                {{ form.answer1 }}
+
+                <label for="id_answer2">중대장님 성함은 무엇인가요?</label>
+                {{ form.answer2 }}
+
+                <label for="id_answer3">싸지방 컴퓨터 대수는 몇 대인가요?</label>
+                {{ form.answer3 }}
+                
+
+                <button type="submit">부대 추가</button>
+            </form>
+
+            <!-- 주의사항 -->
+            <div class="note">
+                부대명은 최대한 자세하게 작성해주시면 찾기 쉬워집니다.<br>
+                부대의 범위는 생활관 룰이 미치는 범위까지입니다.<br>
+                익명을 위해서 최대 중대 혹은 대대까지만 부대명을 적어주세요.<br>
+                질문은 해당 커뮤니티를 다른 사용자가 가입할 때 사용됩니다.<br>
+                동일한 이름의 부대 커뮤니티가 있는 경우 생성되지 않습니다.<br>
+                <span style="color: red;">부대를 추가하면 자동으로 그 부대에 가입됩니다.</span>
+            </div>
+        </div>
+
+        <div class="unit-list">
+            <h2>현재 등록된 부대 커뮤니티</h2>
+            <ul>
+                {% for unit in units %}
+                    <li>{{ unit.name }}</li>
+                {% empty %}
+                    <li>등록된 부대 커뮤니티가 없습니다.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

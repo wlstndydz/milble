@@ -1,0 +1,105 @@
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 64px); /* 헤더 높이를 뺀 나머지 높이 */
+        }
+        .login-container {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 70vw;
+            max-width: 400px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #4b5563;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #1d4ed8;
+        }
+        .signup-link {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #6b7280;
+        }
+        .signup-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #dc2626;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        /* 반응형 웹 CSS */
+        html {
+            font-size: 16px; /* 기본 폰트 크기 */
+        }
+        @media (max-width: 1200px) {
+            html {
+                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
+            }
+        }

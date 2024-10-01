@@ -1,200 +1,19 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milble - 부대 검색 및 가입</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        header {
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .login-btn {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-        .header-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #2563eb;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-decoration: none;
-        }
-        .btn {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-        .btn:hover {
-            background-color: #1d4ed8;
-        }
-        .main-title {
-            font-size: 1.5rem;
-            width: 100%;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: bold;
-            text-align: center;
-            margin: 2rem 0;
-            overflow: hidden;
-            white-space: nowrap;
-            letter-spacing: 0.15em;
-        }
-        .search-form, .join-form {
-            max-width: 600px;
-            margin: 2rem auto;
-            background-color: white;
-            padding: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-radius: 0.5rem;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        input[type="text"] {
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.25rem;
-            font-size: 1rem;
-        }
-        .error {
-            color: #dc2626;
-            margin-bottom: 1rem;
-        }
-        .unit-list {
-            max-width: 600px;
-            margin: 2rem auto;
-            background-color: white;
-            padding: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-radius: 0.5rem;
-        }
-        .unit-list ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .unit-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .unit-list a {
-            text-decoration: none;
-            color: #2563eb;
-            font-weight: bold;
-        }
-        .unit-list a:hover {
-            text-decoration: underline;
-        }
-        /* 반응형 웹 CSS */
-        html {
-            font-size: 16px; /* 기본 폰트 크기 */
-        }
-        @media (max-width: 1200px) {
-            html {
-                font-size: 16px; /* 데스크톱보다 작은 화면일 때 폰트 크기 줄이기 */
-            }
-            .unit-posts {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.2rem;
-                margin-top: 2rem;
-            }
-        }
+{% extends 'base.html' %}
+{% load static %}
 
-        @media (max-width: 768px) {
-            html {
-                font-size: 14px; /* 태블릿 크기일 때 폰트 크기 더 줄이기 */
-            }
-            .unit-posts {
-                display: grid;
-                grid-template-columns: repeat(1, 1fr);
-                gap: 0.2rem;
-                margin-top: 2rem;
-            }
-        }
+{% block title %}Milble - 부대 검색 및 가입{% endblock %}
 
-        @media (max-width: 480px) {
-            html {
-                font-size: 12px; /* 모바일 크기일 때 폰트 크기 더 줄이기 */
-            }
-            .unit-posts {
-                display: grid;
-                grid-template-columns: repeat(1, 1fr);
-                gap: 0.2rem;
-                margin-top: 2rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="{% url 'index' %}" class="logo">
-                    <span>Milble</span>
-                </a>
-                <div class="header-buttons">
-                    {% if user.is_authenticated %}
-                        <button class="login-btn" onclick="window.location.href='{% url 'profile' %}'">내정보</button>
-                        {% if user.is_authenticated and user.unit %}
-                            <button class="login-btn" onclick="window.location.href='{% url 'post_create' %}'">글쓰기</button>
-                        {% else %}
-                            <button class="login-btn" onclick="window.location.href='{% url 'join_unit' %}'">부대가입</button>
-                        {% endif %}
-                    {% else %}
-                        <button class="login-btn" onclick="window.location.href='{% url 'login' %}'">로그인</button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </header>
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'join_unit.css' %}">
+{% endblock %}
 
+{% block main %}
     <main class="container">
         <h1 class="main-title">부대 검색 및 가입</h1>
+        <p class="note">
+            부대 검색 후 간단한 질문으로 해당 부대를 인증하게 됩니다.<br>
+            부대 검색 후 스크롤 및 하단에 생기는 질문을 답변해주세요.
+        </p>
 
         <div class="search-form">
             <form method="GET" action="">
@@ -204,14 +23,14 @@
             </form>
         </div>
 
-        {% if units %}
+        {% if units and not selected_unit %}
         <div class="unit-list">
             <h2>검색 결과</h2>
             <ul>
                 {% for unit in units %}
                     <li>
                         <a href="?query={{ search_form.cleaned_data.query }}&unit_id={{ unit.id }}">
-                            {{ unit.name }}
+                            {{ unit.name }} - 인원수 : {{ unit.subscriber_count }}
                         </a>
                     </li>
                 {% endfor %}
@@ -244,5 +63,4 @@
         </div>
         {% endif %}
     </main>
-</body>
-</html>
+{% endblock %}

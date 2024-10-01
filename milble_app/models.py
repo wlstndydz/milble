@@ -9,6 +9,8 @@ class Unit(models.Model):
     answer1 = models.CharField(max_length=255, blank=False)
     answer2 = models.CharField(max_length=255, blank=False)
     answer3 = models.CharField(max_length=255, blank=False)
+    
+    subscriber_count = models.PositiveIntegerField(default=0)  # 가입자 수 변수 추가
 
     def __str__(self):
         return self.name
