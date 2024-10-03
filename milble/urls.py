@@ -35,5 +35,6 @@ urlpatterns = [
     path('create-unit/', views.unit_create_view, name='create_unit'),
     path('join/', views.join_unit_view, name='join_unit'),
     path('popular/', views.popular_posts_view, name='popular_posts'),
-    path('post/<int:post_id>/like/', views.post_like, name='post_like')
+    path('post/<int:post_id>/like/', views.post_like, name='post_like'),
+    path('search/', views.search_posts, name='search_posts')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -54,7 +54,7 @@ def index(request):
     units = Unit.objects.all()
     unit_posts = {}
     for unit in units:
-        unit_posts[unit] = Post.objects.filter(unit=unit).order_by('-created_at')[:5]  # 각 부대별 상위 5개 게시물
+        unit_posts[unit] = Post.objects.filter(unit=unit, category__isnull=True).order_by('-created_at')[:5]  # 각 부대별 상위 5개 게시물
 
     return render(request, 'index.html', {
         'popular_posts': popular_posts,
@@ -147,9 +147,6 @@ def post_create_view(request):
         'user_units': user_units,  # 사용자 부대
         'categories': categories,  # 카테고리 목록
     })
-
-from django.shortcuts import get_object_or_404, render
-from .models import Unit, Category, Post
 
 def posts_view(request, posts_name):
     
@@ -343,3 +340,20 @@ def join_unit_view(request):
         'units': units,
         'selected_unit': unit
     })
+
+#검색기능
+def search_posts(request):
+    query = request.GET.get('q')
+    posts = Post.objects.filter(title__icontains=query) | Post.objects.filter(content__icontains=query)
+    
+    # 모든 부대와 카테고리를 가져옵니다.
+    units = Unit.objects.exclude(name=request.user.unit) if request.user.is_authenticated else Unit.objects.all()
+    categories = Category.objects.exclude(name="전체")  # '전체' 카테고리는 제외하고 표시
+
+    context = {
+        'posts': posts,
+        'query': query,
+        'units': units,
+        'categories': categories
+    }
+    return render(request, 'search_result.html', context)

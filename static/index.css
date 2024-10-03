@@ -40,7 +40,15 @@
             top: 50%;
             transform: translateY(-50%);
             color: #9ca3af;
+            cursor: pointer;
+            font-size: 1rem; /* 아이콘 크기 조정 */
         }
+
+        #hidden-search-button {
+            display: none;
+        }
+
+
         .post-units {
             background-color: white;
             border-radius: 0.5rem;

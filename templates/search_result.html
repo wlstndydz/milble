@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mask_filters %}
+
+{% block title %}Milble - 검색 결과{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'posts.css' %}">
+{% endblock %}
+
+{% block main %}
+    <main class="container">
+        <!-- 검색 결과 제목 -->
+        <h1 class="unit-title">
+            "{{ query }}"에 대한 검색 결과
+        </h1>
+        
+        <!-- 부대 및 카테고리 리스트와 버튼 영역 분리 -->
+        <div class="units">
+            <div class="units-list">
+                <!-- 전체 버튼 -->
+                <button class="unit-btn" onclick="window.location.href='{% url 'popular_posts' %}'">전체</button>
+                
+                <!-- 사용자가 속한 부대 버튼 -->
+                {% if user.unit %}
+                    {% if current_unit == user.unit %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' user.unit.name %}'">{{ user.unit.name }}</button>
+                    {% else %}
+                        <button class="unit-btn" onclick="window.location.href='{% url 'posts' user.unit.name %}'">{{ user.unit.name }}</button>
+                    {% endif %}
+                {% endif %}
+                
+                <!-- 카테고리 버튼 추가 -->
+                {% for category in categories %}
+                    {% if current_category == category %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' category.name %}'">{{ category.name }}</button>
+                    {% else %}
+                        <button class="unit-btn" onclick="window.location.href='{% url 'posts' category.name %}'">{{ category.name }}</button>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- 다른 부대 버튼들 -->
+                {% for unit in units %}
+                    {% if current_unit == unit %}
+                        <button class="selected-unit-btn" onclick="window.location.href='{% url 'posts' unit.name %}'">{{ unit.name }}</button>
+                    {% else %}
+                        <button class="unit-btn" onclick="window.location.href='{% url 'posts' unit.name %}'">{{ unit.name }}</button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 게시물 리스트 -->
+        <div class="post-list">
+            {% for post in posts %}
+                <div class="post-item">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                    <p class="post-content">{{ post.content|truncatewords:20 }}</p>
+                    <div class="post-meta">
+                        <!-- 게시물의 unit이 없으면 category를 표시 -->
+                        <div class="unit-author">
+                            <span class="unit">{% if post.unit %}{{ post.unit.name }}{% else %}{{ post.category.name }}{% endif %}</span>
+                            <span class="post-author">{{ post.author|mask_author }}</span>
+                        </div>
+                        <div class="post-stats">
+                            <div class="like-stat">
+                                <span class="icon">❤️</span>
+                                <span class="number">{{ post.likes }}</span>
+                            </div>
+                            <div class="comment-stat">
+                                <span class="icon">💬</span>
+                                <span class="number">{{ post.comments.count }}</span>
+                            </div>
+                            <div class="views-stat">
+                                <span class="icon">👀</span>
+                                <span class="number">{{ post.views }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>검색어에 해당하는 게시물이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}
