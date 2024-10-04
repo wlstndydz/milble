@@ -46,6 +46,13 @@ class Post(models.Model):
     comments_count = models.PositiveIntegerField(default=0)  # 댓글 수, 기본값 0
     views = models.PositiveIntegerField(default=0)  # 조회수, 기본값 0
     liked_users = models.ManyToManyField('CustomUser', related_name='liked_posts', blank=True)  # 좋아요 누른 사용자들
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['unit']),          # unit 필드에 인덱스 추가
+            models.Index(fields=['category']),      # category 필드에 인덱스 추가
+            models.Index(fields=['created_at']),    # created_at 필드에 인덱스 추가
+        ]
 
     def __str__(self):
         return self.title
@@ -56,6 +63,12 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.CharField(max_length=100)  # 글쓴이
     unit = models.CharField(max_length=100)  # 부대 소속
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['post']),          # post 필드에 인덱스 추가
+            models.Index(fields=['created_at']),    # created_at 필드에 인덱스 추가
+        ]
 
     def __str__(self):
         return f'Comment on {self.post.title} by {self.author}'

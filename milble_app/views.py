@@ -18,32 +18,31 @@ from .forms import UnitForm
 from .forms import UnitSearchForm, UnitJoinForm
 from django.utils import timezone
 from datetime import timedelta
+from django.views.decorators.cache import cache_page
 
 
 from django.shortcuts import render
 from .models import Unit, Post
 
 def index(request):
-    # 예: 최근 7일 이내의 게시물 중에서 좋아요 순으로 5개 가져오기
+    # 최근 7일 이내의 게시물 중에서 좋아요 순으로 5개 가져오기
     recent_time_period = timezone.now() - timedelta(days=7)
     popular_posts = Post.objects.filter(created_at__gte=recent_time_period).order_by('-likes')[:5]
-    
-    #자유게시물 
+
+    # 자유 게시물: 최근 7일 이내 좋아요 순으로 5개 가져오기
     category_posts = Post.objects.filter(category__name='자유', created_at__gte=recent_time_period).order_by('-likes')[:5]
 
     # 사용자 로그인 확인 및 소속 부대의 게시물 가져오기
     user_unit_posts = None
     if request.user.is_authenticated and request.user.unit:
         user_unit = request.user.unit
-        # 우리부대 게시물: 좋아요 순으로 2개, 최신순으로 3개
-        # 인기 게시물 2개
+
+        # 우리 부대 게시물: 좋아요 순으로 2개 가져오기
         popular_user_unit_posts = Post.objects.filter(unit=user_unit, category__isnull=True).order_by('-comments_count')[:2]
-        print(popular_user_unit_posts)
+        popular_user_unit_ids = list(popular_user_unit_posts.values_list('id', flat=True))  # ID 리스트로 변환
 
-
-
-        # 최근 게시물에서 인기 게시물 제외
-        recent_user_unit_posts = Post.objects.filter(unit=user_unit, category__isnull=True).exclude(id__in=popular_user_unit_posts.values_list('id', flat=True)).order_by('-created_at')[:3]
+        # 최근 게시물에서 인기 게시물을 제외한 최신순으로 3개 가져오기
+        recent_user_unit_posts = Post.objects.filter(unit=user_unit, category__isnull=True).exclude(id__in=popular_user_unit_ids).order_by('-created_at')[:3]
 
         user_unit_posts = {
             'popular': popular_user_unit_posts,
@@ -56,11 +55,12 @@ def index(request):
     for unit in units:
         unit_posts[unit] = Post.objects.filter(unit=unit, category__isnull=True).order_by('-created_at')[:5]  # 각 부대별 상위 5개 게시물
 
+    # 템플릿에 데이터 전달
     return render(request, 'index.html', {
         'popular_posts': popular_posts,
         'user_unit_posts': user_unit_posts,
         'unit_posts': unit_posts,  # 부대별 게시물 추가
-        'category_posts':category_posts
+        'category_posts': category_posts,
     })
 
 
@@ -82,6 +82,8 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            print(form.cleaned_data['id'])
+            print(form.cleaned_data['password'])
             id = form.cleaned_data['id']
             password = form.cleaned_data['password']
             
@@ -148,6 +150,7 @@ def post_create_view(request):
         'categories': categories,  # 카테고리 목록
     })
 
+@cache_page(60 * 15)  # 15분 동안 캐시
 def posts_view(request, posts_name):
     
     # posts_name으로 부대 정보를 먼저 검색합니다.
@@ -181,7 +184,7 @@ def posts_view(request, posts_name):
         'post_name': posts_name  # posts_name 변수를 렌더링에 전달
     })
 
-
+@cache_page(60 * 15)  # 15분 동안 캐시
 def popular_posts_view(request):
     # 좋아요와 댓글 수를 기준으로 인기 게시물 정렬
     popular_posts = Post.objects.all().order_by('-likes', '-comments')  # 좋아요, 댓글 수 기준으로 정렬
@@ -197,7 +200,7 @@ def popular_posts_view(request):
         'categories': categories
     })
 
-
+@cache_page(60 * 15)  # 15분 동안 캐시
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()  # 해당 게시물에 달린 모든 댓글을 가져옴
@@ -211,6 +214,7 @@ def post_detail(request, post_id):
 
         # 댓글 작성 처리
         if 'comment-submit' in request.POST:
+            print(request.POST)
             form = CommentForm(request.POST)
             if form.is_valid():
                 comment = form.save(commit=False)

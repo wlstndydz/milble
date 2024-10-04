@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+from logging.handlers import RotatingFileHandler
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bha38gp2h0q00v1*u96j4q4y-q@fz@q)klikt&+n6+lmolnx6)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -78,8 +79,12 @@ WSGI_APPLICATION = 'milble.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'MILBLE_DATABASE',         # MySQL에서 생성한 데이터베이스 이름
+        'USER': 'milble',         # MySQL 사용자 이름
+        'PASSWORD': 'Milble123$', # MySQL 사용자 비밀번호
+        'HOST': 'localhost',            # 데이터베이스 서버의 호스트 (로컬 서버라면 localhost)
+        'PORT': '3306',                 # MySQL의 기본 포트 번호
     }
 }
 
@@ -134,3 +139,51 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'milble_app.CustomUser'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis 서버의 위치와 사용 데이터베이스 번호
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {
+                'max_connections': 100,  # 최대 연결 수 설정 (필요시 조정)
+            },
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',  # RotatingFileHandler 사용
+            'filename': os.path.join('/workspace/milbl_project/error_logs', 'error.log'),
+            'maxBytes': 1024*1024*5,  # 최대 파일 크기 5MB
+            'backupCount': 3,         # 최대 3개의 백업 파일 유지
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}
