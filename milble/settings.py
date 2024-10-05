@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bha38gp2h0q00v1*u96j4q4y-q@fz@q)klikt&+n6+lmolnx6)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -183,7 +183,12 @@ LOGGING = {
         'django': {
             'handlers': ['file'],
             'level': 'WARNING',
-            'propagate': False,
+            'propagate': True,
         },
     },
 }
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis 브로커 설정 예시
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TASK_SERIALIZER = 'json'

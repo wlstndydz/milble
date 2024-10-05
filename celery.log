@@ -1,0 +1,120 @@
+ 
+ -------------- celery@goorm v5.2.7 (dawn-chorus)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-1044-aws-x86_64-with-debian-bullseye-sid 2024-10-05 04:36:51
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         milble:0x7f2eb9a2d490
+- ** ---------- .> transport:   redis://localhost:6379/0
+- ** ---------- .> results:     redis://localhost:6379/0
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . milble.celery.debug_task
+  . milble_app.tasks.handle_like_action
+
+/workspace/milbl_project/mbenv/lib/python3.7/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2024-10-05 04:36:52,125: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2024-10-05 04:36:52,127: INFO/MainProcess] mingle: searching for neighbors
+[2024-10-05 04:36:53,135: INFO/MainProcess] mingle: all alone
+[2024-10-05 04:36:53,144: WARNING/MainProcess] /workspace/milbl_project/mbenv/lib/python3.7/site-packages/celery/fixups/django.py:204: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  leak, never use this setting in production environments!''')
+
+[2024-10-05 04:36:53,144: INFO/MainProcess] celery@goorm ready.
+[2024-10-05 04:36:53,306: INFO/MainProcess] Task milble_app.tasks.handle_like_action[c8b81220-5066-4f9f-96ee-058a9cf420d3] received
+[2024-10-05 04:36:53,307: INFO/MainProcess] Task milble_app.tasks.handle_like_action[61d29cc4-23c8-4358-bba8-cc0631f695b6] received
+/workspace/milbl_project/mbenv/lib/python3.7/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2024-10-05 04:36:53,308: WARNING/ForkPoolWorker-1] celery ok
+/workspace/milbl_project/mbenv/lib/python3.7/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2024-10-05 04:36:53,308: WARNING/ForkPoolWorker-3] celery ok
+[2024-10-05 04:36:53,309: INFO/MainProcess] Task milble_app.tasks.handle_like_action[02c1ee1e-a47a-42a5-a7b7-be9088ecf284] received
+[2024-10-05 04:36:53,310: INFO/MainProcess] Task milble_app.tasks.handle_like_action[40fa8544-323e-4978-acf8-939f71126963] received
+/workspace/milbl_project/mbenv/lib/python3.7/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2024-10-05 04:36:53,311: WARNING/ForkPoolWorker-2] celery ok
+/workspace/milbl_project/mbenv/lib/python3.7/site-packages/celery/platforms.py:841: SecurityWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2024-10-05 04:36:53,311: WARNING/ForkPoolWorker-4] celery ok
+[2024-10-05 04:36:53,312: INFO/MainProcess] Task milble_app.tasks.handle_like_action[dd536549-78c4-4a9f-b9c2-ae16c2ca5405] received
+[2024-10-05 04:36:53,315: INFO/MainProcess] Task milble_app.tasks.handle_like_action[c98237f8-fc9b-46e6-b34b-ee98ddf996ad] received
+[2024-10-05 04:36:53,316: INFO/MainProcess] Task milble_app.tasks.handle_like_action[9a7975d4-bc3b-41f9-b97c-88c4d7928b6d] received
+[2024-10-05 04:36:53,317: INFO/MainProcess] Task milble_app.tasks.handle_like_action[0d874167-d513-4e56-a56a-673ee4de26f8] received
+[2024-10-05 04:36:53,318: INFO/MainProcess] Task milble_app.tasks.handle_like_action[a10826bf-7d83-4b30-b0c6-1e26a8018d62] received
+[2024-10-05 04:36:53,389: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:36:53,392: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[c8b81220-5066-4f9f-96ee-058a9cf420d3] succeeded in 0.08409703150391579s: None
+[2024-10-05 04:36:53,394: WARNING/ForkPoolWorker-1] celery ok
+[2024-10-05 04:36:53,405: WARNING/ForkPoolWorker-2] save ok
+[2024-10-05 04:36:53,405: WARNING/ForkPoolWorker-3] save ok
+[2024-10-05 04:36:53,409: INFO/ForkPoolWorker-3] Task milble_app.tasks.handle_like_action[61d29cc4-23c8-4358-bba8-cc0631f695b6] succeeded in 0.10090556368231773s: None
+[2024-10-05 04:36:53,409: INFO/ForkPoolWorker-2] Task milble_app.tasks.handle_like_action[02c1ee1e-a47a-42a5-a7b7-be9088ecf284] succeeded in 0.0986500158905983s: None
+[2024-10-05 04:36:53,412: WARNING/ForkPoolWorker-3] celery ok
+[2024-10-05 04:36:53,412: WARNING/ForkPoolWorker-2] celery ok
+[2024-10-05 04:36:53,423: WARNING/ForkPoolWorker-4] save ok
+[2024-10-05 04:36:53,426: INFO/ForkPoolWorker-4] Task milble_app.tasks.handle_like_action[40fa8544-323e-4978-acf8-939f71126963] succeeded in 0.11553330346941948s: None
+[2024-10-05 04:36:53,427: WARNING/ForkPoolWorker-4] celery ok
+[2024-10-05 04:36:53,433: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:36:53,434: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[dd536549-78c4-4a9f-b9c2-ae16c2ca5405] succeeded in 0.03996254503726959s: None
+[2024-10-05 04:36:53,435: WARNING/ForkPoolWorker-1] celery ok
+[2024-10-05 04:36:53,477: WARNING/ForkPoolWorker-3] save ok
+[2024-10-05 04:36:53,478: INFO/ForkPoolWorker-3] Task milble_app.tasks.handle_like_action[c98237f8-fc9b-46e6-b34b-ee98ddf996ad] succeeded in 0.06637493520975113s: None
+[2024-10-05 04:36:53,495: WARNING/ForkPoolWorker-2] save ok
+[2024-10-05 04:36:53,496: INFO/ForkPoolWorker-2] Task milble_app.tasks.handle_like_action[9a7975d4-bc3b-41f9-b97c-88c4d7928b6d] succeeded in 0.0836963914334774s: None
+[2024-10-05 04:36:53,513: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:36:53,514: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[a10826bf-7d83-4b30-b0c6-1e26a8018d62] succeeded in 0.0789116770029068s: None
+[2024-10-05 04:36:53,545: WARNING/ForkPoolWorker-4] save ok
+[2024-10-05 04:36:53,545: INFO/ForkPoolWorker-4] Task milble_app.tasks.handle_like_action[0d874167-d513-4e56-a56a-673ee4de26f8] succeeded in 0.11807730048894882s: None
+[2024-10-05 04:37:12,220: INFO/MainProcess] Task milble_app.tasks.handle_like_action[a69b058e-e5e5-4711-ae2c-5adba67ae0b5] received
+[2024-10-05 04:37:12,221: WARNING/ForkPoolWorker-1] celery ok
+[2024-10-05 04:37:12,272: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:37:12,272: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[a69b058e-e5e5-4711-ae2c-5adba67ae0b5] succeeded in 0.051071640104055405s: None
+[2024-10-05 04:38:54,282: INFO/MainProcess] Task milble_app.tasks.handle_like_action[16467ea0-3e71-4451-8c8c-da37573221c4] received
+[2024-10-05 04:38:54,282: WARNING/ForkPoolWorker-1] celery ok
+[2024-10-05 04:38:54,333: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:38:54,334: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[16467ea0-3e71-4451-8c8c-da37573221c4] succeeded in 0.052004046738147736s: None
+[2024-10-05 04:48:05,024: INFO/MainProcess] Task milble_app.tasks.handle_like_action[44532d72-4fe6-42bb-84ec-a0f2688c3684] received
+[2024-10-05 04:48:05,024: WARNING/ForkPoolWorker-1] celery ok
+[2024-10-05 04:48:05,081: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:48:05,082: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[44532d72-4fe6-42bb-84ec-a0f2688c3684] succeeded in 0.058067597448825836s: None
+[2024-10-05 04:48:50,324: INFO/MainProcess] Task milble_app.tasks.handle_like_action[72b67c00-c39b-4755-a271-6bba741470e6] received
+[2024-10-05 04:48:50,325: WARNING/ForkPoolWorker-1] celery ok
+[2024-10-05 04:48:50,376: WARNING/ForkPoolWorker-1] save ok
+[2024-10-05 04:48:50,376: INFO/ForkPoolWorker-1] Task milble_app.tasks.handle_like_action[72b67c00-c39b-4755-a271-6bba741470e6] succeeded in 0.051602721214294434s: None

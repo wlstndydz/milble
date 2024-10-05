@@ -256,7 +256,7 @@
             font-size: 1rem; /* 버튼의 크기와 텍스트 크기를 동일하게 맞춤 */
             color: inherit; /* 텍스트 색상 상속 */
             padding: 0;  /* 불필요한 패딩 제거 */
-            transform: translateY(0.2rem); /* Y축 아래로 5px 이동 */
+            transform: translateY(0.04rem); /* Y축 아래로 5px 이동 */
             font-size: 0.875rem;
         }
 

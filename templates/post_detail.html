@@ -27,19 +27,26 @@
         <!-- 좋아요, 댓글 수, 조회수 영역 추가 -->
         <div class="post-stats">
         <!-- 좋아요 버튼 -->
-        <form method="POST" action="{% url 'post_like' post.id %}" class="like-form">
-            {% csrf_token %}
-            <button type="submit" class="like-button">
-                <span class="icon">
-                    {% if user in post.liked_users.all %}
-                        ❤️
+                    {% csrf_token %}
+                    {% if user.is_authenticated %}
+                        <!-- 로그인한 사용자용 좋아요 버튼 -->
+                        <button id="like-button-{{ post.id }}" class="like-button" onclick="toggleLike({{ post.id }})">
+                            <span class="icon">
+                                {% if user in post.liked_users.all %}
+                                    ❤️
+                                {% else %}
+                                    🤍
+                                {% endif %}
+                            </span>
+                            <span class="number" id="likes-count-{{ post.id }}">{{ post.likes }}</span>
+                        </button>
                     {% else %}
-                        🤍
+                        <!-- 로그인하지 않은 사용자용 좋아요 버튼 -->
+                        <button id="like-button-{{ post.id }}" class="like-button" onclick="likeDisabledAlert()">
+                            <span class="icon">🤍</span>
+                            <span class="number" id="likes-count-{{ post.id }}">{{ post.likes }}</span>
+                        </button>
                     {% endif %}
-                </span>
-                <span class="number">{{ post.likes }}</span>
-            </button>
-        </form>
             <div class="comment-stat">
                 <span class="icon">💬</span>
                 <span class="number">{{ post.comments_count }}</span>
@@ -112,27 +119,61 @@
             {% endif %}
         </div>
     </div>
-    <script>
-        function toggleReplyForm(commentId) {
-            var replyForm = document.getElementById('reply-form-' + commentId);
-            if (replyForm.style.display === 'none' || replyForm.style.display === '') {
-                replyForm.style.display = 'block';
-            } else {
-                replyForm.style.display = 'none';
+<script>
+    function likeDisabledAlert() {
+        alert("로그인 후 좋아요를 누를 수 있습니다.");
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
-        document.addEventListener("DOMContentLoaded", function() {
-            const commentForms = document.querySelectorAll(".comment-form, .reply-form-inner");
-            commentForms.forEach(form => {
-                const input = form.querySelector("input[name='content']");
-                form.addEventListener("submit", function(event) {
-                    if (input.value.trim() === "") {
-                        event.preventDefault();
-                        alert("댓글 내용을 입력해주세요.");
-                        input.focus();
-                    }
-                });
-            });
+        return cookieValue;
+    }
+
+    function toggleLike(postId) {
+        const likeButton = document.querySelector(`#like-button-${postId} .icon`);
+        const likesCount = document.querySelector(`#likes-count-${postId}`);
+        const currentLikes = parseInt(likesCount.innerText, 10);
+        let liked = likeButton.innerText === '🤍';
+
+        // UI 즉시 업데이트
+        if (liked) {
+            likeButton.innerText = '❤️';
+            likesCount.innerText = currentLikes + 1;
+        } else {
+            likeButton.innerText = '🤍';
+            likesCount.innerText = currentLikes - 1;
+        }
+
+        // 서버에 비동기 요청 보내기
+        fetch(`/post/${postId}/like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return console.log(response.json());
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // 서버 오류 발생 시에도 UI를 변경하지 않고 그대로 유지
         });
-    </script>
+    }
+</script>
+
+
 {% endblock %}

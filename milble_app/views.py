@@ -19,6 +19,8 @@ from .forms import UnitSearchForm, UnitJoinForm
 from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.cache import cache_page
+from .tasks import handle_like_action  # Celery 작업 큐에 추가
+from django.http import JsonResponse
 
 
 from django.shortcuts import render
@@ -200,7 +202,6 @@ def popular_posts_view(request):
         'categories': categories
     })
 
-@cache_page(60 * 15)  # 15분 동안 캐시
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()  # 해당 게시물에 달린 모든 댓글을 가져옴
@@ -256,23 +257,32 @@ def post_detail(request, post_id):
     }
     return render(request, 'post_detail.html', context)
 
-#좋아요기능
+@login_required
 def post_like(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    user = request.user
+    if request.method == 'POST':
+        print("ok1")
+        post = get_object_or_404(Post, id=post_id)
+        user = request.user
+        print("ok2")
 
-    if user.is_authenticated:
-        if user in post.liked_users.all():
-            # 이미 좋아요를 누른 경우 -> 좋아요 취소
-            post.liked_users.remove(user)
-            post.likes -= 1
+        # 좋아요 여부 확인
+        if post.liked_users.filter(id=user.id).exists():
+            liked = False
         else:
-            # 좋아요를 누르지 않은 경우 -> 좋아요 추가
-            post.liked_users.add(user)
-            post.likes += 1
-        post.save()
+            liked = True
+            
+        print("ok3")
 
-    return redirect('post_detail', post_id=post_id)
+        # 좋아요 추가/삭제 작업을 비동기적으로 처리
+        handle_like_action.delay(post_id, user.id, liked)
+        
+        print("ok4")
+
+        # 임시로 좋아요 수 계산 (실제는 백그라운드 작업 완료 후 반영)
+        return JsonResponse({'liked': liked, 'likes_count': post.liked_users.count()}, status=200)
+    
+    print("no")
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def unit_create_view(request):
     
